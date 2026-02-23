@@ -1,29 +1,128 @@
-<!DOCTYPE HTML>
-<html>
-  <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Oatmeal's Cave</title>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-            * {
-                margin: 0;
-                padding: 0;
-                box-sizing: border-box;
-            }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Oatmeal's Cave</title>
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: Open Sans, sans-serif;
+      background: #fafafa;
+    }
 
-            body {
-                font-family: 'Roboto';
-                background-color: #f8f9fa;
-                color: #202124;
-            }
-      </style>
-  </head>
-  <body>
-    <header>
-      <h1>Oatmeal's Cave</h1>
-    </header>
-    <h3>The cave is under construction</h3>
-    <h6>still learning HTML btw</h6>
-  </body>
+    .site-header {
+      padding: 30px;
+      background: #f5f5f5;
+      border-bottom: 1px solid #ddd;
+    }
+
+    .card-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      padding: 20px;
+    }
+
+    /* Card container */
+    .card {
+      background: white;
+      border-radius: 0px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      overflow: hidden;
+    }
+
+    /* Summary (clickable header) */
+    .card summary {
+      padding: 16px;
+      cursor: pointer;
+      font-weight: bold;
+      list-style: none;
+      position: relative;
+    }
+
+    /* Remove default arrow */
+    .card summary::-webkit-details-marker {
+      display: none;
+    }
+
+    /* Custom arrow */
+    .card summary::after {
+      content: "▾";
+      position: absolute;
+      right: 16px;
+      top: 16px;
+      transform: rotate(90deg); /* start pointing up */
+      transition: transform 0.25s ease;
+    }
+
+    details[open] summary::after {
+      transform: rotate(0deg);
+    }
+    .card-content {
+  overflow: hidden;
+  padding: 0 16px;
+  border-top: 1px solid #eee;
+  max-height: 0;              /* just for clipping */
+  opacity: 0;
+  transform: translateY(-4px);
+  transition:
+    opacity 0.22s ease,
+}
+
+details[open] .card-content {
+  max-height: 1000px;         /* big enough to contain anything */
+  opacity: 1;
+  transform: translateY(0);
+  padding: 16px;
+}
+.site-footer {
+  padding: 20px;
+  background: #f5f5f5;
+  border-top: 1px solid #ddd;
+  text-align: center;
+  font-family: Open Sans, sans-serif;
+  color: #555;
+}
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+.site-footer {
+  margin-top: auto;
+}
+
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <h1>Oatmeal's Cave</h1>
+    <p>Just a cave. The mountain is coming soon</p>
+  </header>
+    <details class="card">
+      <summary>About</summary>
+      <div class="card-content">
+        <p>This site is still under construction. If you have any places where I could learn HTML, Discuss.</p>
+<a class="github-button" href="https://github.com/oatmeal3ds/oatmeal3ds.github.io/discussions" data-color-scheme="no-preference: dark; light: light; dark: dark;" data-icon="octicon-comment-discussion" data-size="large" aria-label="Discuss oatmeal3ds/oatmeal3ds.github.io on GitHub">Discuss</a>
+      </div>
+    </details>
+
+    <details class="card">
+      <summary>Social Links</summary>
+      <div class="card-content">
+<a class="github-button" href="https://github.com/oatmeal3ds" data-color-scheme="no-preference: dark; light: light; dark: dark;" data-size="large" aria-label="Follow @oatmeal3ds on GitHub">Follow @oatmeal3ds</a>
+      </div>
+    </details>
+    <footer class="site-footer">
+  <p>© Oatmeal Plays — All rights reserved.</p>
+</footer>
+
+</body>
 </html>
