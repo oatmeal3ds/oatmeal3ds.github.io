@@ -24,24 +24,18 @@
       gap: 16px;
       padding: 20px;
     }
-    .cards {
-      padding: 16px;
-      background: white;
-      border-radius: 0px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      overflow: hidden;
-    }
     /* Card container */
     .card {
       background: white;
       border-radius: 0px;
       box-shadow: 0 2px 6px rgba(0,0,0,0.1);
       overflow: hidden;
+      padding: 0px 16px;
     }
 
     /* Summary (clickable header) */
     .card summary {
-      padding: 16px;
+      padding: 16px 0px;
       cursor: pointer;
       font-weight: bold;
       list-style: none;
@@ -59,30 +53,27 @@
       position: absolute;
       right: 16px;
       top: 16px;
-      transform: rotate(90deg); /* start pointing up */
+      transform: rotate(90deg); /* start pointing right */
       transition: transform 0.25s ease;
     }
 
     details[open] summary::after {
       transform: rotate(0deg);
     }
-    .card-content {
+.card-content {
   overflow: hidden;
-  padding: 0 16px;
+  padding: 16px;
   border-top: 1px solid #eee;
-  max-height: 0;              /* just for clipping */
+  max-height: 0;
   opacity: 0;
-  transform: translateY(-4px);
-  transition:
-    opacity 0.22s ease,
 }
 
 details[open] .card-content {
-  max-height: 1000px;         /* big enough to contain anything */
+  max-height: 1000px;
   opacity: 1;
-  transform: translateY(0);
   padding: 16px;
 }
+
 .site-footer {
   padding: 20px;
   background: #f5f5f5;
@@ -103,14 +94,75 @@ body {
 .site-footer {
   margin-top: auto;
 }
+/* DARK MODE */
+body.dark {
+  background: #111;
+  color: #eee;
+}
+
+body.dark .site-header {
+  background: #1a1a1a;
+  border-bottom: 1px solid #333;
+}
+
+body.dark .card {
+  background: #1c1c1c;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+
+body.dark .card summary {
+  color: #fff;
+}
+
+body.dark .card-content {
+  border-top: 1px solid #333;
+  color: #ddd;
+}
+body.dark .site-footer {
+  background: #1c1c1c;
+  color: #ccc;
+  border-top: 1px solid #333;
+}
+.construction-tape {
+  width: 100%;
+  padding: 5px 0;
+  text-align: center;
+  font-weight: bold;
+  color: white;
+
+  /* The diagonal stripes */
+  background: repeating-linear-gradient(
+    -45deg,
+    #fdd835 0,
+    #fdd835 20px,
+    #000 20px,
+    #000 40px
+  );
+
+  /* Make the background bigger so it can slide */
+  background-size: 200% 100%;
+
+  /* The animation */
+  animation: slideTape 0.5s linear infinite;
+}
+
+/* The actual animation */
+@keyframes slideTape {
+  from {
+    background-position: 0 0;
+  }
+  to {
+    background-position: -55px 0;
+  }
+}
   </style>
 </head>
-<body>
-
+<body class="dark">
   <header class="site-header">
     <h1>Oatmeal's Cave</h1>
     <p>Just a cave. The mountain is coming soon</p>
   </header>
+  <div class="construction-tape">UNDER CONSTRUCTION</div>
     <details class="card">
       <summary>About</summary>
       <div class="card-content">
@@ -125,9 +177,24 @@ body {
 <a class="github-button" href="https://github.com/oatmeal3ds" data-color-scheme="no-preference: dark; light: light; dark: dark;" data-size="large" aria-label="Follow @oatmeal3ds on GitHub">Follow @oatmeal3ds</a>
       </div>
     </details>
+    <div class="card">
+      <p>This site is maybe now... uhh pretty finished?</p>
+    </div>
     <footer class="site-footer">
   <p>© Oatmeal Plays — All rights reserved.</p>
 </footer>
+<script>
+let darkMode = true; // change to true to force dark mode
 
+function applyTheme() {
+  if (darkMode) {
+    document.body.classList.add("dark");
+  } else {
+    document.body.classList.remove("dark");
+  }
+}
+
+applyTheme();
+</script>
 </body>
 </html>
