@@ -4,197 +4,216 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Oatmeal's Cave</title>
-<script async defer src="https://buttons.github.io/buttons.js"></script>
+  
+  <script src="https://www.google.com/recaptcha/api.js?render=6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:wght@100&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
   <style>
+    :root {
+      --accent-green: #2e4d22;
+      --header-height: 80px;
+      --yt-red: #FF0000;
+      --dc-blue: #5865F2;
+      --st-blue: #1b2838;
+      --sc-orange: #FFAB19;
+      --gh-dark: #24292e;
+    }
+
+    /* --- SCROLLBAR --- */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 5px; border: 2px solid #111; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-green); }
+
     body {
-      margin: 0;
-      font-family: Open Sans, sans-serif;
-      background: #fafafa;
+      margin: 0; font-family: 'Open Sans', sans-serif;
+      background: #111; color: #eee;
+      display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden;
     }
 
+    /* --- HEADER & HERO --- */
     .site-header {
-      padding: 30px;
-      background: #f5f5f5;
-      border-bottom: 1px solid #ddd;
+      position: fixed; top: 0; width: 100%; height: var(--header-height);
+      display: flex; align-items: center; padding: 0 30px; z-index: 3000; 
+      transition: 0.3s; background: transparent; box-sizing: border-box;
+    }
+    .site-header.scrolled { background: #1a1a1a; height: 60px; border-bottom: 1px solid #333; }
+    
+    .brand { 
+      display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;
+      font-family: 'Roboto', sans-serif; font-weight: 100; font-size: 1.5rem;
+    }
+    .brand img { width: 32px; height: 32px; border-radius: 4px; }
+
+    .hero {
+      position: relative; height: 50vh; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-bg {
+      position: absolute; top: 0; left: 0; width: 100%; height: 120%;
+      background: linear-gradient(rgba(0,0,0,0.4), #111), 
+                  url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80');
+      background-size: cover; background-position: center; z-index: -1;
+    }
+    .hero-title {
+        font-family: 'Roboto', sans-serif; font-weight: 100; font-size: 4.5rem;
+        margin: 0; color: white; letter-spacing: 6px; text-align: center;
     }
 
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 16px;
-      padding: 20px;
+    /* --- PROGRESS BAR --- */
+    .progress-container {
+      margin: 20px; background: #222; border: 2px solid #333; height: 35px;
+      position: relative; overflow: hidden;
     }
-    /* Card container */
-    .card {
-      background: white;
-      border-radius: 0px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      overflow: hidden;
-      padding: 0px 16px;
+    .progress-fill {
+      height: 100%; width: 65%; transition: width 1s ease-in-out;
+      background: repeating-linear-gradient(-45deg, #fdd835 0, #fdd835 20px, #000 20px, #000 40px);
+      background-size: 200% 100%; animation: slideTape 0.5s linear infinite;
+    }
+    .progress-text {
+      position: absolute; width: 100%; text-align: center; top: 8px;
+      font-weight: 900; font-size: 14px; color: white;
+      text-shadow: 2px 2px 0px #000; text-transform: uppercase; z-index: 2;
+    }
+    @keyframes slideTape { from { background-position: 0 0; } to { background-position: -55px 0; } }
+
+    /* --- DASHBOARD BUTTONS --- */
+    .social-container { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+    .dash-btn {
+      display: flex; align-items: center; text-decoration: none;
+      font-weight: bold; font-size: 14px; border-radius: 4px;
+      height: 44px; overflow: hidden; transition: transform 0.2s;
+    }
+    .dash-btn:hover { transform: translateX(8px); }
+    .btn-main {
+      display: flex; align-items: center; gap: 12px; padding: 0 18px;
+      height: 100%; color: white; flex-grow: 1;
+    }
+    .btn-main i { font-size: 1.2rem; color: white; }
+    .sc-svg { width: 22px; height: 22px; }
+
+    .btn-stats {
+      background: #252525; color: #999; padding: 0 15px; height: 100%;
+      display: flex; align-items: center; justify-content: center;
+      min-width: 140px; font-size: 11px; letter-spacing: 1px;
+      border-left: 1px solid rgba(255,255,255,0.05); text-transform: uppercase;
     }
 
-    /* Summary (clickable header) */
-    .card summary {
-      padding: 16px 0px;
-      cursor: pointer;
-      font-weight: bold;
-      list-style: none;
-      position: relative;
-    }
+    .yt-dash { background: var(--yt-red); }
+    .dc-dash { background: var(--dc-blue); }
+    .st-dash { background: var(--st-blue); }
+    .sc-dash { background: var(--sc-orange); }
+    .gh-dash { background: var(--gh-dark); }
 
-    /* Remove default arrow */
-    .card summary::-webkit-details-marker {
-      display: none;
-    }
+    /* --- CARDS --- */
+    .card { background: #1c1c1c; margin: 15px 20px; border-radius: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.6); }
+    .card summary { padding: 16px; cursor: pointer; font-weight: bold; list-style: none; position: relative; }
+    .card summary::after { content: "▾"; position: absolute; right: 20px; transform: rotate(90deg); transition: 0.2s; }
+    details[open] summary::after { transform: rotate(0deg); }
+    .card-content { padding: 16px; border-top: 1px solid #333; }
 
-    /* Custom arrow */
-    .card summary::after {
-      content: "▾";
-      position: absolute;
-      right: 16px;
-      top: 16px;
-      transform: rotate(90deg); /* start pointing right */
-      transition: transform 0.25s ease;
-    }
+    /* News Styling */
+    .news-text { font-style: italic; color: #fdd835; }
 
-    details[open] summary::after {
-      transform: rotate(0deg);
-    }
-.card-content {
-  overflow: hidden;
-  padding: 16px;
-  border-top: 1px solid #eee;
-  max-height: 0;
-  opacity: 0;
-}
-
-details[open] .card-content {
-  max-height: 1000px;
-  opacity: 1;
-  padding: 16px;
-}
-
-.site-footer {
-  padding: 20px;
-  background: #f5f5f5;
-  border-top: 1px solid #ddd;
-  text-align: center;
-  font-family: Open Sans, sans-serif;
-  color: #555;
-}
-html, body {
-  height: 100%;
-}
-
-body {
-  display: flex;
-  flex-direction: column;
-}
-
-.site-footer {
-  margin-top: auto;
-}
-/* DARK MODE */
-body.dark {
-  background: #111;
-  color: #eee;
-}
-
-body.dark .site-header {
-  background: #1a1a1a;
-  border-bottom: 1px solid #333;
-}
-
-body.dark .card {
-  background: #1c1c1c;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.6);
-}
-
-body.dark .card summary {
-  color: #fff;
-}
-
-body.dark .card-content {
-  border-top: 1px solid #333;
-  color: #ddd;
-}
-body.dark .site-footer {
-  background: #1c1c1c;
-  color: #ccc;
-  border-top: 1px solid #333;
-}
-.construction-tape {
-  width: 100%;
-  padding: 5px 0;
-  text-align: center;
-  font-weight: bold;
-  color: white;
-
-  /* The diagonal stripes */
-  background: repeating-linear-gradient(
-    -45deg,
-    #fdd835 0,
-    #fdd835 20px,
-    #000 20px,
-    #000 40px
-  );
-
-  /* Make the background bigger so it can slide */
-  background-size: 200% 100%;
-
-  /* The animation */
-  animation: slideTape 0.5s linear infinite;
-}
-
-/* The actual animation */
-@keyframes slideTape {
-  from {
-    background-position: 0 0;
-  }
-  to {
-    background-position: -55px 0;
-  }
-}
+    footer { padding: 30px; text-align: center; color: #777; margin-top: auto; border-top: 1px solid #333; }
   </style>
 </head>
-<body class="dark">
-  <header class="site-header">
-    <h1>Oatmeal's Cave</h1>
-    <p>Just a cave. The mountain is coming soon</p>
+<body>
+
+  <header class="site-header" id="header">
+    <a href="#" class="brand">
+      <img src="https://github.com/oatmeal3ds.png" alt="Logo">
+      <span>Oatmeal's Cave</span>
+    </a>
   </header>
-  <div class="construction-tape">UNDER CONSTRUCTION</div>
+
+  <div class="hero">
+    <div class="hero-bg" id="hero-bg"></div>
+    <div style="z-index: 1;">
+      <h1 class="hero-title">THE MOUNTAIN</h1>
+      <p style="color: white; font-weight: 300; letter-spacing: 2px; text-align: center;">Security and Style Updated.</p>
+    </div>
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-fill"></div>
+    <div class="progress-text">Mountain Progress: 65%</div>
+  </div>
+
+  <div style="padding-top: 10px;">
+    <div class="card">
+      <summary style="cursor: default;">Cave News</summary>
+      <div class="card-content">
+        <p class="news-text" id="stat-news">Fetching the latest scrolls...</p>
+      </div>
+    </div>
+
+    <details class="card" id="social-card" open>
+      <summary>Social Links</summary>
+      <div class="card-content">
+     <div class="social-container">
+          
+  <a href="https://github.com/oatmeal3ds" target="_blank" class="dash-btn">
+    <div class="btn-main gh-dash"><i class="fa-brands fa-github"></i> GitHub</div>
+    <div class="btn-stats" id="stat-github">USER</div>
+  </a>
+
+  <a href="https://www.youtube.com/@Oatmeal_3DS" target="_blank" class="dash-btn">
+    <div class="btn-main yt-dash"><i class="fa-brands fa-youtube"></i> Subscribe</div>
+    <div class="btn-stats" id="stat-youtube">20+ SUBS</div>
+  </a>
+
+  <a href="https://discord.gg/dR9QzWdBDF" target="_blank" class="dash-btn">
+    <div class="btn-main dc-dash"><i class="fa-brands fa-discord"></i> Join Discord</div>
+    <div class="btn-stats" id="stat-discord">COMMUNITY</div>
+  </a>
+
+  <a href="https://steamcommunity.com/profiles/76561199823401937" target="_blank" class="dash-btn">
+    <div class="btn-main st-dash"><i class="fa-brands fa-steam"></i> oatmealplayz2</div>
+    <div class="btn-stats" id="stat-steam">USER</div>
+  </a>
+
+  <a href="https://scratch.mit.edu/users/Oatmeal3ds123" target="_blank" class="dash-btn">
+    <div class="btn-main sc-dash">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Scratch_S.svg" class="sc-svg" alt="S"> 
+        Follow
+    </div>
+    <div class="btn-stats" id="stat-scratch">SCRATCHER</div>
+  </a>
+
+</div>
+      </div>
+    </details>
+
     <details class="card">
       <summary>About</summary>
       <div class="card-content">
-        <p>This site is still under construction. If you have any places to learn HTML, maybe make an issue or discuss!</p>
-<a class="github-button" href="https://github.com/oatmeal3ds/oatmeal3ds.github.io/issues" data-color-scheme="no-preference: light; light: light; dark: dark;" data-icon="octicon-issue-opened" data-size="large" aria-label="Issue oatmeal3ds/oatmeal3ds.github.io on GitHub">Issue</a>
+        <p>Hello! I am oatmeal, and I like making games! I sometimes stop and forget about some half-made games, but I still enjoy the process of making them!</p>
+        <p>~Oatmeal</p>
       </div>
     </details>
+  </div>
 
-    <details class="card">
-      <summary>Social Links</summary>
-      <div class="card-content">
-<a class="github-button" href="https://github.com/oatmeal3ds" data-color-scheme="no-preference: dark; light: light; dark: dark;" data-size="large" aria-label="Follow @oatmeal3ds on GitHub">Follow @oatmeal3ds</a>
-      </div>
-    </details>
-    <div class="card">
-      <p>This site is maybe now... uhh pretty finished?</p>
-    </div>
-    <footer class="site-footer">
-  <p>© Oatmeal Plays — All rights reserved.</p>
-</footer>
-<script>
-let darkMode = true; // change to true to force dark mode
+  <footer>© Oatmeal Plays — All rights reserved.</footer>
 
-function applyTheme() {
-  if (darkMode) {
-    document.body.classList.add("dark");
-  } else {
-    document.body.classList.remove("dark");
-  }
-}
+  <script>
+    const header = document.getElementById('header');
+    const heroBg = document.getElementById('hero-bg');
 
-applyTheme();
-</script>
+    window.addEventListener('scroll', () => {
+      let val = window.scrollY;
+      if (val > 50) header.classList.add('scrolled');
+      else header.classList.remove('scrolled');
+      heroBg.style.transform = `translateY(${val * 0.4}px)`;
+    });
+
+    grecaptcha.ready(function() {
+      grecaptcha.execute('6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU', {action: 'homepage'});
+    });
+  </script>
 </body>
 </html>
