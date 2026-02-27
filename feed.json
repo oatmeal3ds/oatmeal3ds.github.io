@@ -1,1 +1,14 @@
-
+[
+  {
+    "title": "OatSS is Live",
+    "date": "Feb 27, 2026",
+    "desc": "Bypassed the Blogger mess. Everything is now local JSON.",
+    "url": "https://github.com/oatmeal3ds"
+  },
+  {
+    "title": "Mountain Security",
+    "date": "Feb 26, 2026",
+    "desc": "Reinforced the dashboard. No cookies allowed in the cave.",
+    "url": "#"
+  }
+]
