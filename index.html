@@ -70,12 +70,9 @@
       position: relative; overflow: hidden;
     }
     .progress-fill {
-      height: 100%; 
-      width: 0%; /* Start at 0 so it slides up on load */
-      transition: width 1.5s cubic-bezier(0.1, 0.7, 1.0, 0.1); 
+      height: 100%; width: 65%; transition: width 1s ease-in-out;
       background: repeating-linear-gradient(-45deg, #fdd835 0, #fdd835 20px, #000 20px, #000 40px);
-      background-size: 200% 100%; 
-      animation: slideTape 0.5s linear infinite;
+      background-size: 200% 100%; animation: slideTape 0.5s linear infinite;
     }
     .progress-text {
       position: absolute; width: 100%; text-align: center; top: 8px;
@@ -236,32 +233,35 @@
       grecaptcha.execute('6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU', {action: 'homepage'});
     });
 
-function oatSS_Callback(data) {
+// 1. This function runs as soon as the news.js file loads
+function oatSS_Callback(scrolls) {
     const feedContainer = document.getElementById('news-feed');
-    const progressFill = document.querySelector('.progress-fill');
-    const progressText = document.querySelector('.progress-text');
-
-    // 1. Update the Progress Bar
-    if (data.progress) {
-        const percent = data.progress + "%";
-        progressFill.style.width = percent;
-        progressText.innerText = `Mountain Progress: ${percent}`;
-    }
     
-    // 2. Load the Scrolls
-    const scrolls = data.scrolls;
     if (scrolls && scrolls.length > 0) {
         feedContainer.innerHTML = ''; 
         scrolls.forEach(item => {
             feedContainer.innerHTML += `
                 <div class="news-item">
                     <span class="news-date">${item.date}</span>
-                    <div class="news-title" style="font-weight: bold; color: #fdd835;">${item.title}</div>
-                    <p style="margin: 5px 0 0; font-size: 0.85rem; color: #bbb;">${item.desc}</p>
+                    <a href="${item.url}" target="_blank" class="news-link">
+                        ${item.title} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.7rem; margin-left: 5px;"></i>
+                    </a>
+                    <p style="margin: 0; font-size: 0.85rem; color: #bbb;">${item.desc}</p>
                 </div>`;
         });
     }
 }
+
+// 2. This part "injects" the script to bypass CORS
+function loadOatSS() {
+    const script = document.createElement('script');
+    // Using a timestamp to ensure the news isn't cached
+    script.src = `https://oatmeal3ds.github.io/news.js?t=${Date.now()}`;
+    document.body.appendChild(script);
+}
+
+// Call the injector
+loadOatSS();
   </script>
 </body>
 </html>
