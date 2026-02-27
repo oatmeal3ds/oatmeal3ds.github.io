@@ -94,7 +94,22 @@
       height: 100%; color: white; flex-grow: 1;
     }
     .btn-main i { font-size: 1.2rem; color: white; }
-    .sc-svg { width: 22px; height: 22px; }
+
+/* Cleaned up the Scratch Icon - No more white filter */
+    .sc-icon-wrap { 
+      width: 22px; 
+      height: 22px; 
+      display: flex; 
+      align-items: center; 
+      justify-content: center;
+      background: white; /* Scratch 'S' looks best on its white circular base */
+      border-radius: 50%;
+      padding: 2px;
+    }
+    .sc-svg { 
+      width: 100%; 
+      height: 100%; 
+    }
 
     .btn-stats {
       background: #252525; color: #999; padding: 0 15px; height: 100%;
@@ -116,8 +131,10 @@
     details[open] summary::after { transform: rotate(0deg); }
     .card-content { padding: 16px; border-top: 1px solid #333; }
 
-    /* News Styling */
-    .news-text { font-style: italic; color: #fdd835; }
+    .news-item { margin-bottom: 12px; padding-left: 10px; border-left: 2px solid var(--accent-green); }
+    .news-link { color: #fdd835; text-decoration: none; font-weight: bold; display: block; }
+    .news-link:hover { text-decoration: underline; }
+    .news-date { font-size: 0.75rem; color: #777; }
 
     footer { padding: 30px; text-align: center; color: #777; margin-top: auto; border-top: 1px solid #333; }
   </style>
@@ -145,47 +162,50 @@
   </div>
 
   <div style="padding-top: 10px;">
-    <div class="card">
-      <summary style="cursor: default;">Cave News</summary>
-      <div class="card-content">
-        <p class="news-text" id="stat-news">Fetching the latest scrolls...</p>
+    
+    <details class="card" open>
+      <summary>Cave Scrolls (Blogger)</summary>
+      <div class="card-content" id="news-feed">
+        <p style="color: #777;">Unrolling the scrolls...</p>
       </div>
-    </div>
+    </details>
 
-    <details class="card" id="social-card" open>
+    <details class="card" open>
       <summary>Social Links</summary>
       <div class="card-content">
-     <div class="social-container">
+        <div class="social-container">
           
-  <a href="https://github.com/oatmeal3ds" target="_blank" class="dash-btn">
-    <div class="btn-main gh-dash"><i class="fa-brands fa-github"></i> GitHub</div>
-    <div class="btn-stats" id="stat-github">USER</div>
-  </a>
+          <a href="https://github.com/oatmeal3ds" target="_blank" class="dash-btn">
+            <div class="btn-main gh-dash"><i class="fa-brands fa-github"></i> GitHub</div>
+            <div class="btn-stats">USER</div>
+          </a>
 
-  <a href="https://www.youtube.com/@Oatmeal_3DS" target="_blank" class="dash-btn">
-    <div class="btn-main yt-dash"><i class="fa-brands fa-youtube"></i> Subscribe</div>
-    <div class="btn-stats" id="stat-youtube">20+ SUBS</div>
-  </a>
+          <a href="https://www.youtube.com/@Oatmeal_3DS" target="_blank" class="dash-btn">
+            <div class="btn-main yt-dash"><i class="fa-brands fa-youtube"></i> Subscribe</div>
+            <div class="btn-stats">20+ SUBS</div>
+          </a>
 
-  <a href="https://discord.gg/dR9QzWdBDF" target="_blank" class="dash-btn">
-    <div class="btn-main dc-dash"><i class="fa-brands fa-discord"></i> Join Discord</div>
-    <div class="btn-stats" id="stat-discord">COMMUNITY</div>
-  </a>
+          <a href="https://discord.gg/dR9QzWdBDF" target="_blank" class="dash-btn">
+            <div class="btn-main dc-dash"><i class="fa-brands fa-discord"></i> Join Discord</div>
+            <div class="btn-stats">COMMUNITY</div>
+          </a>
 
-  <a href="https://steamcommunity.com/profiles/76561199823401937" target="_blank" class="dash-btn">
-    <div class="btn-main st-dash"><i class="fa-brands fa-steam"></i> oatmealplayz2</div>
-    <div class="btn-stats" id="stat-steam">USER</div>
-  </a>
+          <a href="https://steamcommunity.com/profiles/76561199823401937" target="_blank" class="dash-btn">
+            <div class="btn-main st-dash"><i class="fa-brands fa-steam"></i> Steam</div>
+            <div class="btn-stats">USER</div>
+          </a>
 
-  <a href="https://scratch.mit.edu/users/Oatmeal3ds123" target="_blank" class="dash-btn">
-    <div class="btn-main sc-dash">
-        <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Scratch_S.svg" class="sc-svg" alt="S"> 
-        Follow
-    </div>
-    <div class="btn-stats" id="stat-scratch">SCRATCHER</div>
-  </a>
+          <a href="https://scratch.mit.edu/users/Oatmeal3ds123" target="_blank" class="dash-btn">
+            <div class="btn-main sc-dash">
+                <div class="sc-icon-wrap">
+                  <img src="https://upload.wikimedia.org/wikipedia/commons/b/b1/Scratch_S.svg" class="sc-svg" alt="S"> 
+                </div>
+                Scratch
+            </div>
+            <div class="btn-stats">FOLLOWER</div>
+          </a>
 
-</div>
+        </div>
       </div>
     </details>
 
@@ -214,6 +234,40 @@
     grecaptcha.ready(function() {
       grecaptcha.execute('6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU', {action: 'homepage'});
     });
-  </script>
+
+async function fetchBloggerNews() {
+  const RSS_URL = "https://oatmeal3ds.blogspot.com/feeds/posts/default?alt=rss";
+  const PROXY_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}`;
+
+  try {
+    const response = await fetch(PROXY_URL);
+    const data = await response.json();
+    const feedContainer = document.getElementById('news-feed');
+
+    if (data.status === 'ok' && data.items.length > 0) {
+      feedContainer.innerHTML = ''; 
+      
+      data.items.forEach(item => {
+        const date = new Date(item.pubDate).toLocaleDateString();
+        
+        // FIX: If title is empty, use a placeholder so the link isn't invisible
+        const displayTitle = item.title.trim() !== "" ? item.title : `Scroll from ${date}`;
+        
+        feedContainer.innerHTML += `
+          <div class="news-item" style="margin-bottom: 12px; padding-left: 10px; border-left: 2px solid var(--accent-green);">
+            <span class="news-date" style="font-size: 0.75rem; color: #777;">${date}</span>
+            <a href="${item.link}" target="_blank" class="news-link" style="color: #fdd835; text-decoration: none; font-weight: bold; display: block;">
+              ${displayTitle} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.7rem; margin-left: 5px;"></i>
+            </a>
+          </div>`;
+      });
+    } else {
+      feedContainer.innerHTML = '<p style="color: #777;">The scrolls are blank.</p>';
+    }
+  } catch (err) {
+    document.getElementById('news-feed').innerHTML = '<p style="color: #777;">The DuckDuckGo monster blocked the scrolls.</p>';
+  }
+}
+</script>
 </body>
 </html>
