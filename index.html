@@ -123,16 +123,52 @@
     .gh-dash { background: var(--gh-dark); }
 
     /* --- CARDS --- */
-    .card { background: #1c1c1c; margin: 15px 20px; border-radius: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.6); }
-    .card summary { padding: 16px; cursor: pointer; font-weight: bold; list-style: none; position: relative; }
-    .card summary::after { content: "▾"; position: absolute; right: 20px; transform: rotate(90deg); transition: 0.2s; }
-    details[open] summary::after { transform: rotate(0deg); }
-    .card-content { padding: 16px; border-top: 1px solid #333; }
-
-    .news-item { margin-bottom: 12px; padding-left: 10px; border-left: 2px solid var(--accent-green); }
-    .news-link { color: #fdd835; text-decoration: none; font-weight: bold; display: block; }
-    .news-link:hover { text-decoration: underline; }
-    .news-date { font-size: 0.75rem; color: #777; }
+    .card {
+    background: #1c1c1c;
+    margin: 15px 20px;
+    border-radius: 0;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+    overflow: hidden;
+    }
+    .card:not(details) {
+     padding: 16px;
+     }
+    .card summary {
+    padding: 16px;
+    cursor: pointer;
+    font-weight: bold;
+    list-style: none;
+    position: relative;
+    }
+    .card summary::after {
+    content: "▾"; position: absolute;
+    right: 20px; transform: rotate(90deg);
+    transition: 0.2s; }
+    details[open] summary::after {
+    transform: rotate(0deg);
+    }
+    .card-content {
+    padding: 16px;
+    border-top: 1px solid #333;
+    }
+    /* --- NEWS --- */
+    .news-item {
+    margin-bottom: 12px;
+    padding-left: 10px;
+    border-left: 2px solid var(--accent-green);
+    }
+    .news-link {
+    color: #fdd835;
+    text-decoration: none;
+    font-weight: bold;
+    display: block; }
+    .news-link:hover {
+    text-decoration: underline;
+    }
+    .news-date {
+    font-size: 0.75rem;
+    color: #777;
+    }
 
     footer { padding: 30px; text-align: center; color: #777; margin-top: auto; border-top: 1px solid #333; }
   </style>
@@ -214,6 +250,9 @@
         <p>~Oatmeal</p>
       </div>
     </details>
+  </div>
+  <div class="card">
+      Have a great day!
   </div>
 
   <footer>© Oatmeal Plays — All rights reserved.</footer>
