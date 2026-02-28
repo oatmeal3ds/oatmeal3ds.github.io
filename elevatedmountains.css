@@ -1,0 +1,52 @@
+    /* --- SCROLLBAR --- */
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: #111; }
+    ::-webkit-scrollbar-thumb { background: #333; border-radius: 5px; border: 2px solid #111; }
+    ::-webkit-scrollbar-thumb:hover { background: var(--accent-green); }
+    /*---global style----*/
+    body {
+      margin: 0; font-family: 'Open Sans', sans-serif;
+      background: #111; color: #eee;
+      display: flex; flex-direction: column; min-height: 100vh; overflow-x: hidden;
+    }
+   /* --- HEADER & HERO --- */
+    .site-header {
+      position: fixed; top: 0; width: 100%; height: var(--header-height);
+      display: flex; align-items: center; padding: 0 30px; z-index: 3000; 
+      transition: 0.3s; background: transparent; box-sizing: border-box;
+    }
+    .site-header.scrolled { background: #1a1a1a; height: 60px; border-bottom: 1px solid #333; }
+    
+    .brand { 
+      display: flex; align-items: center; gap: 12px; text-decoration: none; color: white;
+      font-family: 'Roboto', sans-serif; font-weight: 100; font-size: 1.5rem;
+    }
+    .brand img { width: 32px; height: 32px; border-radius: 4px; }
+
+    .hero {
+      position: relative; height: 50vh; overflow: hidden;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .hero-bg {
+      position: absolute; top: 0; left: 0; width: 100%; height: 120%;
+      background: linear-gradient(rgba(0,0,0,0.4), #111), 
+                  url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?auto=format&fit=crop&w=1920&q=80');
+      background-size: cover; background-position: center; z-index: -1;
+    }
+    .hero-title {
+        font-family: 'Roboto', sans-serif; font-weight: 100; font-size: 4.5rem;
+        margin: 0; color: white; letter-spacing: 6px; text-align: center;
+    }
+   /*cards*/
+    .card { background: #1c1c1c; margin: 15px 20px; border-radius: 0; box-shadow: 0 2px 6px rgba(0,0,0,0.6); }
+    .card summary { padding: 16px; cursor: pointer; font-weight: bold; list-style: none; position: relative; }
+    .card summary::after { content: "▾"; position: absolute; right: 20px; transform: rotate(90deg); transition: 0.2s; }
+    details[open] summary::after { transform: rotate(0deg); }
+    .card-content { padding: 16px; border-top: 1px solid #333; }
+    /*news assets*/
+    .news-item { margin-bottom: 12px; padding-left: 10px; border-left: 2px solid var(--accent-green); }
+    .news-link { color: #fdd835; text-decoration: none; font-weight: bold; display: block; }
+    .news-link:hover { text-decoration: underline; }
+    .news-date { font-size: 0.75rem; color: #777; }
+    /*mah beatifulk footr*/
+    footer { padding: 30px; text-align: center; color: #777; margin-top: auto; border-top: 1px solid #333; }
