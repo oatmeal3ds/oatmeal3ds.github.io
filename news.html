@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Cave Scrolls — Oatmeal's Cave</title>
+  
+  <script src="https://www.google.com/recaptcha/api.js?render=6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:wght@100&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://oatmeal3ds.github.io/assets/elevatedmountains.css">
+</head>
+<body>
+
+  <header class="site-header" id="header">
+    <a href="/" class="brand">
+      <img src="https://github.com/oatmeal3ds.png" alt="Logo">
+      <span>Oatmeal's Cave</span>
+    </a>
+  </header>
+
+  <div class="hero">
+    <div class="hero-bg" id="hero-bg"></div>
+    <div style="z-index: 1;">
+      <h1 class="hero-title">Cave Scrolls</h1>
+      <p class="hero-sub">All news and updates</p>
+    </div>
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-fill"></div>
+    <div class="progress-text">Mountain Progress: 0%</div>
+  </div>
+
+  <div style="padding-top: 10px;">
+    <details class="card" open>
+      <summary>All Scrolls</summary>
+      <div class="card-content" id="news-feed">
+        <p style="color: #777;">Unrolling the scrolls...</p>
+      </div>
+    </details>
+  </div>
+
+  <footer>© Oatmeal Plays — All rights reserved.</footer>
+
+  <script>
+    const header = document.getElementById('header');
+    const heroBg = document.getElementById('hero-bg');
+
+    window.addEventListener('scroll', () => {
+      let val = window.scrollY;
+      if (val > 50) header.classList.add('scrolled');
+      else header.classList.remove('scrolled');
+      heroBg.style.transform = `translateY(${val * 0.4}px)`;
+    });
+
+    grecaptcha.ready(function() {
+      grecaptcha.execute('6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU', {action: 'homepage'});
+    });
+
+    // Progress bar
+    function mtnprogress_Callback(data) {
+      if (data && data.length > 0) {
+        const percent = data[0].progress;
+        document.querySelector('.progress-fill').style.width = percent + '%';
+        document.querySelector('.progress-text').textContent = 'Mountain Progress: ' + percent + '%';
+      }
+    }
+    function loadOatProgress() {
+      const script = document.createElement('script');
+      script.src = `https://oatmeal3ds.github.io/assets/progress.js?t=${Date.now()}`;
+      document.body.appendChild(script);
+    }
+    loadOatProgress();
+
+    // All news — no slice
+    function oatSS_Callback(scrolls) {
+      const feedContainer = document.getElementById('news-feed');
+      if (scrolls && scrolls.length > 0) {
+        feedContainer.innerHTML = '';
+        scrolls.forEach(item => {
+          feedContainer.innerHTML += `
+            <div class="news-item">
+              <span class="news-date">${item.date}</span>
+              <a href="${item.url}" target="_blank" class="news-link">
+                ${item.title} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7rem;margin-left:5px;"></i>
+              </a>
+              <p class="news-desc">${item.desc}</p>
+            </div>`;
+        });
+      } else {
+        feedContainer.innerHTML = '<p style="color:#777;">No scrolls yet.</p>';
+      }
+    }
+
+    function loadOatSS() {
+      const script = document.createElement('script');
+      script.src = `https://oatmeal3ds.github.io/news.js?t=${Date.now()}`;
+      document.body.appendChild(script);
+    }
+    loadOatSS();
+  </script>
+</body>
+</html>

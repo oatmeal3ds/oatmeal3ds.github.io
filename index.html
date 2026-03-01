@@ -114,21 +114,32 @@
 
 // 1. This function runs as soon as the news.js file loads
 function oatSS_Callback(scrolls) {
-    const feedContainer = document.getElementById('news-feed');
-    
-    if (scrolls && scrolls.length > 0) {
-        feedContainer.innerHTML = ''; 
-        scrolls.forEach(item => {
-            feedContainer.innerHTML += `
-                <div class="news-item">
-                    <span class="news-date">${item.date}</span>
-                    <a href="${item.url}" target="_blank" class="news-link">
-                        ${item.title} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.7rem; margin-left: 5px;"></i>
-                    </a>
-                    <p style="margin: 0; font-size: 0.85rem; color: #bbb;">${item.desc}</p>
-                </div>`;
-        });
+  const feedContainer = document.getElementById('news-feed');
+  feedContainer.innerHTML = '';
+
+  if (scrolls && scrolls.length > 0) {
+    const oneWeekAgo = new Date();
+    oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
+    const recentScrolls = scrolls.filter(item => new Date(item.date) >= oneWeekAgo);
+
+    if (recentScrolls.length > 0) {
+      recentScrolls.forEach(item => {
+        feedContainer.innerHTML += `
+          <div class="news-item">
+            <span class="news-date">${item.date}</span>
+            <a href="${item.url}" target="_blank" class="news-link">
+              ${item.title} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7rem;margin-left:5px;"></i>
+            </a>
+            <p class="news-desc">${item.desc}</p>
+          </div>`;
+      });
+      feedContainer.innerHTML += `<a href="https://oatmeal3ds.github.io/news"><button style="width:100%;margin-top:8px;">Read More</button></a>`;
+    } else {
+      feedContainer.innerHTML = `
+       <p style="color:#777;">No news available at this moment.</p>
+       <a href="https://oatmeal3ds.github.io/news"><button style="width:100%;margin-top:8px;">Read Old News</button></a>`;
     }
+  }
 }
 
 // 2. This part "injects" the script to bypass CORS
