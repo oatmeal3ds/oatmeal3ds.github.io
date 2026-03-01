@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects — Oatmeal's Cave</title>
+  
+  <script src="https://www.google.com/recaptcha/api.js?render=6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:wght@100&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://oatmeal3ds.github.io/assets/elevatedmountains.css">
+
+  <style>
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin: 15px 20px;
+    }
+
+    .project-card {
+      background: #1c1c1c;
+      border: 1px solid #333;
+      border-top: 3px solid #2e4d22;
+      overflow: hidden;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, border-top-color 0.2s;
+    }
+    .project-card:hover {
+      transform: translateY(-4px);
+      border-top-color: #fdd835;
+    }
+
+    .project-thumb {
+      width: 100%;
+      height: 140px;
+      object-fit: cover;
+      background: #222;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #444;
+      font-size: 2rem;
+    }
+
+    .project-info {
+      padding: 12px;
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+    .project-title {
+      font-weight: bold;
+      font-size: 1rem;
+      color: #eee;
+    }
+    .project-desc {
+      font-size: 0.82rem;
+      color: #bbb;
+      flex-grow: 1;
+    }
+    .project-status {
+      font-size: 0.75rem;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      color: #777;
+    }
+    .status-released { color: #4caf50; }
+    .status-wip      { color: #fdd835; }
+    .status-abandoned{ color: #ff4444; }
+
+    .project-footer {
+      padding: 10px 12px;
+      border-top: 1px solid #333;
+    }
+    .project-footer a {
+      display: block;
+      text-align: center;
+      text-decoration: none;
+    }
+    .project-footer button {
+      width: 100%;
+    }
+
+    .section-label {
+      font-size: 0.75rem;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: #555;
+      margin: 20px 20px 0;
+      padding-bottom: 6px;
+      border-bottom: 1px solid #222;
+    }
+  </style>
+</head>
+<body>
+
+  <header class="site-header" id="header">
+    <a href="/" class="brand">
+      <img src="https://github.com/oatmeal3ds.png" alt="Logo">
+      <span>Oatmeal's Cave</span>
+    </a>
+  </header>
+
+  <div class="hero">
+    <div class="hero-bg" id="hero-bg"></div>
+    <div style="z-index: 1;">
+      <h1 class="hero-title">Projects</h1>
+      <p class="hero-sub">Games and stuff made by Oatmeal</p>
+    </div>
+  </div>
+
+  <div class="progress-container">
+    <div class="progress-fill"></div>
+    <div class="progress-text">Mountain Progress: 0%</div>
+  </div>
+
+  <!-- SCRATCH -->
+  <p class="section-label"><i class="fa-brands fa-scratch" style="margin-right:6px;"></i>Scratch</p>
+  <div class="project-grid">
+
+    <div class="project-card">
+      <img class="project-thumb" src="https://uploads.scratch.mit.edu/get_image/project/1089920409_480x360.png" alt="Flying Cat">
+      <div class="project-info">
+        <div class="project-title">Flying Cat</div>
+        <div class="project-desc">A cat that flies. What more do you need?</div>
+        <div class="project-status status-released">Released</div>
+      </div>
+      <div class="project-footer">
+        <a href="https://scratch.mit.edu/projects/1089920409/fullscreen/" target="_blank"><button>Play on Scratch</button></a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img class="project-thumb" src="https://uploads.scratch.mit.edu/get_image/project/1078731731_480x360.png" alt="Global Cookie Clicker">
+      <div class="project-info">
+        <div class="project-title">Global Cookie Clicker</div>
+        <div class="project-desc">Click cookies. A lot of cookies.</div>
+        <div class="project-status status-released">Released</div>
+      </div>
+      <div class="project-footer">
+        <a href="https://scratch.mit.edu/projects/1078731731/fullscreen/" target="_blank"><button>Play on Scratch</button></a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img class="project-thumb" src="https://uploads.scratch.mit.edu/get_image/project/1077343248_480x360.png" alt="Draw">
+      <div class="project-info">
+        <div class="project-title">Draw</div>
+        <div class="project-desc">Draw things. It's a drawing app.</div>
+        <div class="project-status status-released">Released</div>
+      </div>
+      <div class="project-footer">
+        <a href="https://scratch.mit.edu/projects/1077343248/fullscreen/" target="_blank"><button>Play on Scratch</button></a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img class="project-thumb" src="https://uploads.scratch.mit.edu/get_image/project/1260136262_480x360.png" alt="Bouncing Fish">
+      <div class="project-info">
+        <div class="project-title">Bouncing Fish</div>
+        <div class="project-desc">A fish. It bounces.</div>
+        <div class="project-status status-released">Released</div>
+      </div>
+      <div class="project-footer">
+        <a href="https://scratch.mit.edu/projects/1260136262/fullscreen/" target="_blank"><button>Play on Scratch</button></a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img class="project-thumb" src="https://uploads.scratch.mit.edu/get_image/project/1178084414_480x360.png" alt="Scratch Cat is Late">
+      <div class="project-info">
+        <div class="project-title">Scratch Cat is Late</div>
+        <div class="project-desc">The scratch cat is late. Very late.</div>
+        <div class="project-status status-released">Released</div>
+      </div>
+      <div class="project-footer">
+        <a href="https://scratch.mit.edu/projects/1178084414/fullscreen/" target="_blank"><button>Play on Scratch</button></a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img class="project-thumb" src="https://uploads.scratch.mit.edu/get_image/project/1116690043_480x360.png" alt="Scratch Cat Tries to Get Popular">
+      <div class="project-info">
+        <div class="project-title">Scratch Cat Tries to Get Popular</div>
+        <div class="project-desc">The scratch cat wants clout. Relatable.</div>
+        <div class="project-status status-released">Released</div>
+      </div>
+      <div class="project-footer">
+        <a href="https://scratch.mit.edu/projects/1116690043/" target="_blank"><button>Play on Scratch</button></a>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- TURBOWARP -->
+  <p class="section-label">⚡ TurboWarp</p>
+  <div class="project-grid">
+
+    <div class="project-card">
+      <img class="project-thumb" src="https://oatmeal3ds.github.io/assets/images/throw.doggo.png" alt="Throw Doggo">
+      <div class="project-info">
+        <div class="project-title">Throw Doggo</div>
+        <div class="project-desc">Throw a doggo. Simple and satisfying.</div>
+        <div class="project-status status-released">Released</div>
+      </div>
+      <div class="project-footer">
+        <a href="https://drive.google.com/file/d/1yG6bQ9czbq4BS2aPm3EUn0Mza3TMIZ5J/view?usp=sharing" target="_blank"><button>Download (SB3)</button></a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img class="project-thumb" src="https://oatmeal3ds.github.io/assets/images/throwdoggo3d.png" alt="Throw Doggo 3D">
+      <div class="project-info">
+        <div class="project-title">Throw Doggo 3D</div>
+        <div class="project-desc">Throw Doggo but now in 3D. Upgraded doggo.</div>
+        <div class="project-status status-released">Released</div>
+      </div>
+      <div class="project-footer">
+        <a href="https://drive.google.com/file/d/1WL81iEzKXFAjUk1DzCqLqrb2alzQoUzZ/view?usp=sharing" target="_blank"><button>Download (EXE)</button></a>
+      </div>
+    </div>
+
+    <div class="project-card">
+      <img class="project-thumb" src="https://oatmeal3ds.github.io/assets/images/plinko.png" alt="Plink'O">
+      <div class="project-info">
+        <div class="project-title">Plink'O</div>
+        <div class="project-desc">Plinko but make it Scratch. Lost to the void.</div>
+        <div class="project-status status-abandoned">Lost</div>
+      </div>
+      <div class="project-footer">
+        <a href="https://drive.google.com/file/d/1y4nZHx6A7mIKkczAfs81p0qP3Ut7uF5F/view?usp=sharing" target="_blank"><button>Download (Zipped)</button></a>
+      </div>
+    </div>
+
+  </div>
+
+  <footer>© Oatmeal Plays — Made by Oatmeal Plays, Maintained by a bunch of mountain air and pixelated cats.</footer>
+
+  <script>
+    const header = document.getElementById('header');
+    const heroBg = document.getElementById('hero-bg');
+
+    window.addEventListener('scroll', () => {
+      let val = window.scrollY;
+      if (val > 50) header.classList.add('scrolled');
+      else header.classList.remove('scrolled');
+      heroBg.style.transform = `translateY(${val * 0.4}px)`;
+    });
+
+    grecaptcha.ready(function() {
+      grecaptcha.execute('6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU', {action: 'homepage'});
+    });
+
+    function mtnprogress_Callback(data) {
+      if (data && data.length > 0) {
+        const percent = data[0].progress;
+        document.querySelector('.progress-fill').style.width = percent + '%';
+        document.querySelector('.progress-text').textContent = 'Mountain Progress: ' + percent + '%';
+      }
+    }
+    function loadOatProgress() {
+      const script = document.createElement('script');
+      script.src = `https://oatmeal3ds.github.io/assets/progress.js?t=${Date.now()}`;
+      document.body.appendChild(script);
+    }
+    loadOatProgress();
+  </script>
+</body>
+</html>
