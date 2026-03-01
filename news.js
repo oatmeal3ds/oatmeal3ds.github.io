@@ -2,7 +2,7 @@
 oatSS_Callback([
   {
     "title": "New admin panel",
-    "date": "",
+    "date": "Mar 1, 2026",
     "desc": "Here on this admin panel I can make new news! need to add more features tho",
     "url": "https://oatmeal3ds.github.io/"
   },
