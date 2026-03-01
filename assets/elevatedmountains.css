@@ -484,3 +484,22 @@ input[type="file"]::file-selector-button {
 input[type="file"]::file-selector-button:hover {
   background: #4a7a36;
 }
+
+/*Number Picker*/
+    input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  filter: invert(1); /* makes them light colored */
+}
+
+/* URL input */
+input[type="url"] {
+  color: #eee;
+}
+
+/* Color picker */
+    input[type="color"] {
+  padding: 2px;
+  cursor: pointer;
+}
+input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
+input[type="color"]::-webkit-color-swatch { border: none; }
