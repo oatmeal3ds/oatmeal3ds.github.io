@@ -318,3 +318,7 @@ footer {
   margin-top: auto;
   border-top: 1px solid #333;
 }
+
+/* damage the h's and p's padding until it does not thicken cards */
+.card p:first-child, .card h1:first-child, .card h2:first-child { margin-top: 0; }
+.card p:last-child, .card h1:last-child, .card h2:last-child { margin-bottom: 0; }
