@@ -19,6 +19,18 @@ oatHeader_Callback(`
       <a href="/news" class="nav-link">Cave Scrolls</a>
     </nav>
   </header>
+  // Inject progress bar HTML after header
+const progress = document.createElement('div');
+progress.className = 'progress-container';
+progress.innerHTML = `
+  <div class="progress-fill"></div>
+  <div class="progress-text">Mountain Progress: 0%</div>`;
+document.getElementById('site-header').after(progress);
+
+// Load progress data
+const progressScript = document.createElement('script');
+progressScript.src = `https://oatmeal3ds.github.io/assets/progress.js?t=${Date.now()}`;
+document.body.appendChild(progressScript);
 `);
 
 // --- FOOTER ---
@@ -97,4 +109,13 @@ function oatHeader_Callback(html) {
 // --- FOOTER LOGIC ---
 function oatFooter_Callback(text) {
   document.getElementById('site-footer').textContent = text;
+}
+
+// --- PROGRESS BAR LOGIC ---
+function mtnprogress_Callback(data) {
+  if (data && data.length > 0) {
+    const percent = data[0].progress;
+    document.querySelector('.progress-fill').style.width = percent + '%';
+    document.querySelector('.progress-text').textContent = 'Mountain Progress: ' + percent + '%';
+  }
 }
