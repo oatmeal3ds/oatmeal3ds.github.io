@@ -71,9 +71,9 @@
       text-transform: uppercase;
       color: #777;
     }
-    .status-released { color: #4caf50; }
-    .status-wip      { color: #fdd835; }
-    .status-abandoned{ color: #ff4444; }
+    .status-released  { color: #4caf50; }
+    .status-wip       { color: #fdd835; }
+    .status-abandoned { color: #ff4444; }
 
     .project-footer {
       padding: 10px 12px;
@@ -84,9 +84,7 @@
       text-align: center;
       text-decoration: none;
     }
-    .project-footer button {
-      width: 100%;
-    }
+    .project-footer button { width: 100%; }
 
     .section-label {
       font-size: 0.75rem;
@@ -101,12 +99,8 @@
 </head>
 <body>
 
-  <header class="site-header" id="header">
-    <a href="/" class="brand">
-      <img src="https://github.com/oatmeal3ds.png" alt="Logo">
-      <span>Oatmeal's Cave</span>
-    </a>
-  </header>
+  <div id="menu-overlay"></div>
+  <div id="site-header"></div>
 
   <div class="hero">
     <div class="hero-bg" id="hero-bg"></div>
@@ -114,11 +108,6 @@
       <h1 class="hero-title">Projects</h1>
       <p class="hero-sub">Games and stuff made by Oatmeal</p>
     </div>
-  </div>
-
-  <div class="progress-container">
-    <div class="progress-fill"></div>
-    <div class="progress-text">Mountain Progress: 0%</div>
   </div>
 
   <!-- SCRATCH -->
@@ -241,36 +230,19 @@
 
   </div>
 
-  <footer>© Oatmeal Plays — Made by Oatmeal Plays, Maintained by a bunch of mountain air and pixelated cats.</footer>
+  <footer id="site-footer"></footer>
 
   <script>
-    const header = document.getElementById('header');
-    const heroBg = document.getElementById('hero-bg');
-
-    window.addEventListener('scroll', () => {
-      let val = window.scrollY;
-      if (val > 50) header.classList.add('scrolled');
-      else header.classList.remove('scrolled');
-      heroBg.style.transform = `translateY(${val * 0.4}px)`;
-    });
+    function loadOatLayout() {
+      const script = document.createElement('script');
+      script.src = `https://oatmeal3ds.github.io/assets/layout.js?t=${Date.now()}`;
+      document.body.appendChild(script);
+    }
+    loadOatLayout();
 
     grecaptcha.ready(function() {
       grecaptcha.execute('6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU', {action: 'homepage'});
     });
-
-    function mtnprogress_Callback(data) {
-      if (data && data.length > 0) {
-        const percent = data[0].progress;
-        document.querySelector('.progress-fill').style.width = percent + '%';
-        document.querySelector('.progress-text').textContent = 'Mountain Progress: ' + percent + '%';
-      }
-    }
-    function loadOatProgress() {
-      const script = document.createElement('script');
-      script.src = `https://oatmeal3ds.github.io/assets/progress.js?t=${Date.now()}`;
-      document.body.appendChild(script);
-    }
-    loadOatProgress();
   </script>
 </body>
 </html>

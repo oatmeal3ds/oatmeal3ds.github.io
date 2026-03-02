@@ -11,116 +11,94 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:wght@100&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-<link rel="stylesheet" href="https://oatmeal3ds.github.io/assets/elevatedmountains.css">
+  <link rel="stylesheet" href="https://oatmeal3ds.github.io/assets/elevatedmountains.css">
+
+  <style>
+    /* Page-specific styles go here */
+  </style>
 </head>
 <body>
 
-  <header class="site-header" id="header">
-    <a href="#" class="brand">
-      <img src="https://github.com/oatmeal3ds.png" alt="Logo">
-      <span>Oatmeal's Cave</span>
-    </a>
-  </header>
+  <div id="menu-overlay"></div>
+  <div id="site-header"></div>
 
   <div class="hero">
     <div class="hero-bg" id="hero-bg"></div>
     <div style="z-index: 1;">
       <h1 class="hero-title">Template</h1>
-      <p style="color: white; font-weight: 300; letter-spacing: 2px; text-align: center;">Template for making new pages</p>
+      <p class="hero-sub">Template for making new pages</p>
     </div>
   </div>
 
-  <div class="progress-container">
-    <div class="progress-fill"></div>
-    <div class="progress-text">Mountain Progress: 0%</div>
-  </div>
   <div style="padding-top: 10px;">
-      <h1 class="hero-sub">Cards</h1>
-      <details class="card">
-          <summary>Dropdown Card</summary>
-          <div class="card-content">
-              <p>This is a dropdown</p>
-          </div>
-      </details>
-      <div class="card">
-          <p>Normal Card</p>
+
+    <h1 class="hero-sub">Cards</h1>
+    <details class="card">
+      <summary>Dropdown Card</summary>
+      <div class="card-content">
+        <p>This is a dropdown</p>
       </div>
+    </details>
+    <div class="card">
+      <p>Normal Card</p>
+    </div>
+
+    <h1 class="hero-sub">Input</h1>
+    <details class="card">
+      <summary>Text Inputs</summary>
+      <div class="card-content">
+        <p class="hero-sub">Single-Line</p>
+        <input type="text" placeholder="Text">
+        <input type="number" placeholder="Number">
+        <input type="password" placeholder="Password">
+        <input type="email" placeholder="Email">
+        <input type="url" placeholder="URL">
+        <input type="date">
+        <input type="color">
+        <p class="hero-sub">Multi-Line</p>
+        <textarea placeholder="Big text box"></textarea>
+      </div>
+    </details>
+    <details class="card">
+      <summary>Inputs</summary>
+      <div class="card-content">
+        <select>
+          <option>Option 1</option>
+          <option>Option 2</option>
+        </select>
+      </div>
+      <div class="card-content">
+        <div>
+          <input type="checkbox"> Check me
+        </div>
+        <div>
+          <input type="radio" name="group"> Option A
+          <input type="radio" name="group"> Option B
+        </div>
+      </div>
+      <div class="card-content">
+        <input type="range" min="0" max="100">
+      </div>
+      <div class="card-content">
+        <input type="file">
+      </div>
+    </details>
+
   </div>
-    <div style="padding-top: 10px;">
-      <h1 class="hero-sub">Input</h1>
-      <details class="card">
-          <summary>Text Inputs</summary>
-          <div class="card-content">
-              <p class="hero-sub">Single-Line</p>
-              <input type="text" placeholder="Text">
-              <input type="number" placeholder="Number">
-              <input type="password" placeholder="Password">
-              <input type="email" placeholder="Email">
-              <input type="url" placeholder="URL">
-              <input type="date">
-              <input type="color">
-              <p class="hero-sub">Multi-Line</p>
-              <textarea placeholder="Big text box"></textarea>
-          </div>
-      </details>
-      <details class="card">
-          <summary>Inputs</summary>
-          <div class="card-content">
-              <select>
-                <option>Option 1</option>
-                <option>Option 2</option>
-              </select>
-            </div>
-            <div class="card-content">
-                <div>
-                    <input type="checkbox"> Check me
-                </div>
-                <div>
-                    <input type="radio" name="group"> Option A
-                    <input type="radio" name="group"> Option B   
-                </div>
-            </div>
-            <div class="card-content">
-              <input type="range" min="0" max="100">
-            </div>
-            <div class="card-input">
-              <input type="file">
-          </div>
-      </details>
-  </div>
-  <footer>© Oatmeal Plays — Made by Oatmeal Plays, Maintained by a bunch of mountain air and pixelated cats.</footer>
+
+  <footer id="site-footer"></footer>
 
   <script>
-    const header = document.getElementById('header');
-    const heroBg = document.getElementById('hero-bg');
-
-    window.addEventListener('scroll', () => {
-      let val = window.scrollY;
-      if (val > 50) header.classList.add('scrolled');
-      else header.classList.remove('scrolled');
-      heroBg.style.transform = `translateY(${val * 0.4}px)`;
-    });
+    function loadOatLayout() {
+      const script = document.createElement('script');
+      script.src = `https://oatmeal3ds.github.io/assets/layout.js?t=${Date.now()}`;
+      document.body.appendChild(script);
+    }
+    loadOatLayout();
 
     grecaptcha.ready(function() {
       grecaptcha.execute('6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU', {action: 'homepage'});
     });
-
-    // Load Progress Bar Progess
-    function mtnprogress_Callback(data) {
-  if (data && data.length > 0) {
-    const percent = data[0].progress;
-    document.querySelector('.progress-fill').style.width = percent + '%';
-    document.querySelector('.progress-text').textContent = 'Mountain Progress: ' + percent + '%';
-  }
-}
-
-function loadOatProgress() {
-  const script = document.createElement('script');
-  script.src = `https://oatmeal3ds.github.io/assets/progress.js?t=${Date.now()}`;
-  document.body.appendChild(script);
-}
-
-loadOatProgress();
   </script>
 </body>
 </html>
