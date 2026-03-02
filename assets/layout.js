@@ -1,6 +1,16 @@
 // Oatmeal's Cave — layout.js
 // Edit this file to update the header, footer, and progress bar across the entire site.
+// Must be global and defined FIRST before progress.js loads
+function mtnprogress_Callback(data) {
+  if (data && data.length > 0) {
+    const percent = data[0].progress;
+    document.querySelector('.progress-fill').style.width = percent + '%';
+    document.querySelector('.progress-text').textContent = 'Mountain Progress: ' + percent + '%';
+  }
+}
 
+// --- HEADER ---
+oatHeader_Callback(` ... `);
 // --- HEADER ---
 oatHeader_Callback(`
   <header class="site-header" id="main-header">
