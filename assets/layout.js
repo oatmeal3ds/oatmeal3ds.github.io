@@ -28,13 +28,13 @@ oatFooter_Callback(`© Oatmeal Plays — Made by Oatmeal Plays, Maintained by a 
 function oatHeader_Callback(html) {
   document.getElementById('site-header').innerHTML = html;
 
-  // Inject progress bar after header
-  const progress = document.createElement('div');
-  progress.className = 'progress-container';
-  progress.innerHTML = `
-    <div class="progress-fill"></div>
-    <div class="progress-text">Mountain Progress: 0%</div>`;
-  document.getElementById('site-header').after(progress);
+// Inject progress bar after hero
+const progress = document.createElement('div');
+progress.className = 'progress-container';
+progress.innerHTML = `
+  <div class="progress-fill"></div>
+  <div class="progress-text">Mountain Progress: 0%</div>`;
+document.querySelector('.hero').after(progress);
 
   // Load progress data
   function mtnprogress_Callback(data) {
