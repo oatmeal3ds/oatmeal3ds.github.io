@@ -76,3 +76,17 @@ function oatHeader_Callback(html) {
 function oatFooter_Callback(text) {
   document.getElementById('site-footer').textContent = text;
 }
+// --- PROGRESS BAR ---
+function mtnprogress_Callback(data) {
+  if (data && data.length > 0) {
+    const percent = data[0].progress;
+    document.querySelector('.progress-fill').style.width = percent + '%';
+    document.querySelector('.progress-text').textContent = 'Mountain Progress: ' + percent + '%';
+  }
+}
+function loadOatProgress() {
+  const script = document.createElement('script');
+  script.src = `https://oatmeal3ds.github.io/assets/progress.js?t=${Date.now()}`;
+  document.body.appendChild(script);
+}
+loadOatProgress();
