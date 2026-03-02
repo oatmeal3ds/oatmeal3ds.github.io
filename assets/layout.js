@@ -1,6 +1,7 @@
 // Oatmeal's Cave — layout.js
-// Edit this file to update the header/footer across the entire site.
+// Edit this file to update the header, footer, and progress bar across the entire site.
 
+// --- HEADER ---
 oatHeader_Callback(`
   <header class="site-header" id="main-header">
     <a href="/" class="brand">
@@ -20,17 +21,38 @@ oatHeader_Callback(`
   </header>
 `);
 
+// --- FOOTER ---
 oatFooter_Callback(`© Oatmeal Plays — Made by Oatmeal Plays, Maintained by a bunch of mountain air and pixelated cats.`);
 
 // --- HEADER LOGIC ---
 function oatHeader_Callback(html) {
   document.getElementById('site-header').innerHTML = html;
 
-  const header   = document.getElementById('main-header');
+  // Inject progress bar after header
+  const progress = document.createElement('div');
+  progress.className = 'progress-container';
+  progress.innerHTML = `
+    <div class="progress-fill"></div>
+    <div class="progress-text">Mountain Progress: 0%</div>`;
+  document.getElementById('site-header').after(progress);
+
+  // Load progress data
+  function mtnprogress_Callback(data) {
+    if (data && data.length > 0) {
+      const percent = data[0].progress;
+      document.querySelector('.progress-fill').style.width = percent + '%';
+      document.querySelector('.progress-text').textContent = 'Mountain Progress: ' + percent + '%';
+    }
+  }
+  const progressScript = document.createElement('script');
+  progressScript.src = `https://oatmeal3ds.github.io/assets/progress.js?t=${Date.now()}`;
+  document.body.appendChild(progressScript);
+
+  const header    = document.getElementById('main-header');
   const hamburger = document.getElementById('hamburger');
-  const navMenu  = document.getElementById('site-nav');
-  const overlay  = document.getElementById('menu-overlay');
-  const heroBg   = document.getElementById('hero-bg');
+  const navMenu   = document.getElementById('site-nav');
+  const overlay   = document.getElementById('menu-overlay');
+  const heroBg    = document.getElementById('hero-bg');
 
   // Active page highlight
   const path = window.location.pathname.replace(/\/$/, '') || '/';
@@ -76,17 +98,3 @@ function oatHeader_Callback(html) {
 function oatFooter_Callback(text) {
   document.getElementById('site-footer').textContent = text;
 }
-// --- PROGRESS BAR ---
-function mtnprogress_Callback(data) {
-  if (data && data.length > 0) {
-    const percent = data[0].progress;
-    document.querySelector('.progress-fill').style.width = percent + '%';
-    document.querySelector('.progress-text').textContent = 'Mountain Progress: ' + percent + '%';
-  }
-}
-function loadOatProgress() {
-  const script = document.createElement('script');
-  script.src = `https://oatmeal3ds.github.io/assets/progress.js?t=${Date.now()}`;
-  document.body.appendChild(script);
-}
-loadOatProgress();
