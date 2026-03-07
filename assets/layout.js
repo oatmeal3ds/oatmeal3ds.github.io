@@ -114,5 +114,5 @@ initCodeBlocks();
 const gcScript = document.createElement('script');
 gcScript.dataset.goatcounter = 'https://oatmeal3ds.goatcounter.com/count';
 gcScript.async = true;
-gcScript.src = '//gc.zgo.at/count.js';
+gcScript.src = 'https://gc.zgo.at/count.js';
 document.head.appendChild(gcScript);
