@@ -65,6 +65,15 @@ function oatHeader_Callback(html) {
     if (heroBg) heroBg.style.transform = `translateY(${val * 0.4}px)`;
   });
 }
+// --- FAVICON ---
+const favicon = document.createElement('link');
+favicon.rel = 'icon';
+favicon.href = 'https://github.com/oatmeal3ds.png';
+document.head.appendChild(favicon);
+
+// --- TITLE ---
+const SITE_NAME = "Oatmeal's Cave";
+document.title = document.title + ' — ' + SITE_NAME;
 
 function oatFooter_Callback(text) {
   document.getElementById('site-footer').textContent = text;
