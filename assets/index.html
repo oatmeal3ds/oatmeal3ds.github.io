@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Assets</title>
+  
+  <script src="https://www.google.com/recaptcha/api.js?render=6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:wght@100&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://oatmeal3ds.github.io/assets/elevatedmountains.css">
+
+  <style>
+    /* Page-specific styles go here */
+  </style>
+</head>
+<body>
+
+  <div id="menu-overlay"></div>
+  <div id="site-header"></div>
+
+  <div class="hero">
+    <div class="hero-bg" id="hero-bg"></div>
+    <div style="z-index: 1;">
+      <h1 class="hero-title">Assets</h1>
+      <p class="hero-sub">I wonder why are you here...</p>
+    </div>
+  </div>
+
+  <div style="padding-top: 10px;">
+    <div class="card">
+      <p>hmm why are you here???</p>
+      <a href="/"><button style="width:100%">Take me home</button></a>
+  </div>
+    <details class="card">
+        <summary>All Assets</summary>
+        <div class="card-content">
+            <p>You want the assets??? NO!</p>
+            <p>Hope you do NOT get any subpage right!!!</p>
+            <br>
+            <a href="/"><button style="width:100%">GO BACK TO THE HOMEPAGE!!!</button></a>
+        </div>
+    </details>
+  </div>
+
+  <footer id="site-footer"></footer>
+
+  <script>
+    function loadOatLayout() {
+      const script = document.createElement('script');
+      script.src = `https://oatmeal3ds.github.io/assets/layout.js?t=${Date.now()}`;
+      document.body.appendChild(script);
+    }
+    loadOatLayout();
+
+    grecaptcha.ready(function() {
+      grecaptcha.execute('6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU', {action: 'homepage'});
+    });
+  </script>
+</body>
+</html>
