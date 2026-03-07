@@ -137,25 +137,33 @@
       document.body.appendChild(script);
     }
     loadOatSS();
-          const statuses = [
-        "Oatmeal is finding some mice",
-        "Oatmeal is touching grass",
-        "Oatmeal is throwing doggos",
-        "Oatmeal is eating oatmeal",
-        "Oatmeal is debugging at 3am",
-        "Oatmeal is lost in the cave",
-        "Oatmeal is bouncing fish",
-        "Oatmeal is making games nobody asked for",
-        "Oatmeal is vibing with the mountain",
-        "Oatmeal is crying over a bug",
-        "Oatmeal is pretending to know JavaScript",
-        "Oatmeal is somewhere on the internet",
-        "Oatmeal has left the building",
-        "Oatmeal is currently unavailable",
-        "Oatmeal is trying to debug a damn toaster at 3am. Why though?",
-      ];
-      
-      document.getElementById('goofy-status').textContent = 'Status: ' + statuses[Math.floor(Math.random() * statuses.length)];
+ const hour = new Date().getHours();
+let status;
+
+if (hour >= 22 || hour < 7) {
+  status = "Oatmeal SHOULD be sleeping... Right?";
+} else {
+  const statuses = [
+    "Oatmeal is finding some mice",
+    "Oatmeal is touching grass",
+    "Oatmeal is throwing doggos",
+    "Oatmeal is eating oatmeal",
+    "Oatmeal is debugging at 3am",
+    "Oatmeal is lost in the cave",
+    "Oatmeal is bouncing fish",
+    "Oatmeal is making games nobody asked for",
+    "Oatmeal is vibing with the mountain",
+    "Oatmeal is crying over a bug",
+    "Oatmeal is pretending to know JavaScript",
+    "Oatmeal is somewhere on the internet",
+    "Oatmeal has left the building",
+    "Oatmeal is currently unavailable",
+    "Oatmeal is trying to debug a damn toaster at 3am. Why though?",
+  ];
+  status = statuses[Math.floor(Math.random() * statuses.length)];
+}
+
+document.getElementById('goofy-status').textContent = 'Status: ' + status;
   </script>
 </body>
 </html>
