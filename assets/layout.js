@@ -91,3 +91,29 @@ oatHeader_Callback(`
 `);
 
 oatFooter_Callback(`© Oatmeal Plays — Made by Oatmeal Plays, Maintained by a bunch of mountain air and pixelated cats.`);
+
+function initCodeBlocks() {
+  document.querySelectorAll('pre').forEach(pre => {
+    const header = document.createElement('div');
+    header.className = 'pre-header';
+    const btn = document.createElement('button');
+    btn.textContent = 'Copy';
+    btn.style.cssText = 'padding:2px 10px;font-size:11px;';
+    btn.addEventListener('click', () => {
+      const code = pre.querySelector('code');
+      navigator.clipboard.writeText(code ? code.innerText : pre.innerText).then(() => {
+        btn.textContent = 'Copied!';
+        setTimeout(() => btn.textContent = 'Copy', 2000);
+      });
+    });
+    header.appendChild(btn);
+    pre.prepend(header);
+  });
+}
+initCodeBlocks();
+// --- GOATCOUNTER ---
+const gc = document.createElement('script');
+gc.dataset.goatcounter = 'https://oatmeal3ds.goatcounter.com/count';
+gc.async = true;
+gc.src = '//gc.zgo.at/count.js';
+document.head.appendChild(gc);
