@@ -73,7 +73,8 @@ document.head.appendChild(favicon);
 
 // --- TITLE ---
 const SITE_NAME = "Oatmeal's Cave";
-document.title = document.title + ' — ' + SITE_NAME;
+const current = document.title.trim();
+document.title = current ? current + ' — ' + SITE_NAME : SITE_NAME;
 
 function oatFooter_Callback(text) {
   document.getElementById('site-footer').textContent = text;
