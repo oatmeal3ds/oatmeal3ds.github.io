@@ -111,9 +111,8 @@ function initCodeBlocks() {
   });
 }
 initCodeBlocks();
-// --- GOATCOUNTER ---
-const gc = document.createElement('script');
-gc.dataset.goatcounter = 'https://oatmeal3ds.goatcounter.com/count';
-gc.async = true;
-gc.src = '//gc.zgo.at/count.js';
-document.head.appendChild(gc);
+const gcScript = document.createElement('script');
+gcScript.dataset.goatcounter = 'https://oatmeal3ds.goatcounter.com/count';
+gcScript.async = true;
+gcScript.src = '//gc.zgo.at/count.js';
+document.head.appendChild(gcScript);
