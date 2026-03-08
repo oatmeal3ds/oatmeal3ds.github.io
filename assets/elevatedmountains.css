@@ -156,7 +156,7 @@ body {
   width: 100%; height: 120%;
   background:
     linear-gradient(rgba(0,0,0,0.4), #111),
-    url('https://oatmeal3ds.github.io/assets/photo-1464822759023-fed622ff2c3b.avif');
+    url('/assets/photo-1464822759023-fed622ff2c3b.avif');
   background-size: cover;
   background-position: center;
   z-index: -1;

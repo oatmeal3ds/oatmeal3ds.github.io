@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:wght@100&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-  <link rel="stylesheet" href="https://oatmeal3ds.github.io/assets/elevatedmountains.css">
+  <link rel="stylesheet" href="/assets/elevatedmountains.css">
 
   <style>
     .drag-handle {
@@ -112,7 +112,7 @@ input[type="text"], input[type="url"], textarea {
       </details>
       <div class="card" style="text-align: center;">
       <a href="https://www.google.com/recaptcha/admin/site/745843107"><button style="width: 95%; margin: 8px;">Open reCAPTCHA Dashboard</button></a>
-            <a href="https://oatmeal3ds.github.io/"><button style="width: 95%; margin: 8px;">Open Site</button></a>
+            <a href="/"><button style="width: 95%; margin: 8px;">Open Site</button></a>
             <a href="https://github.com/oatmeal3ds/oatmeal3ds.github.io/tree/main"><button style="width: 95%; margin: 8px;">Open GitHub Repo</button></a>
       </div>
           <details class="card">
@@ -138,7 +138,7 @@ input[type="text"], input[type="url"], textarea {
   <script>
     function loadOatLayout() {
       const script = document.createElement('script');
-      script.src = `https://oatmeal3ds.github.io/assets/layout.js?t=${Date.now()}`;
+      script.src = `/assets/layout.js?t=${Date.now()}`;
       document.body.appendChild(script);
     }
     loadOatLayout();
@@ -189,7 +189,7 @@ function renderPage(page) {
 
 function loadOatSS() {
   const script = document.createElement('script');
-  script.src = `https://oatmeal3ds.github.io/news.js?t=${Date.now()}`;
+  script.src = `/news.js?t=${Date.now()}`;
   document.body.appendChild(script);
 }
 
@@ -199,7 +199,7 @@ const PAGE_SIZE = 2;
 
 loadOatSS();
         // --- NEWS EDITOR ---
-    const NEWS_URL = 'https://oatmeal3ds.github.io/news.js';
+    const NEWS_URL = '/news.js';
     let items = [];
     let dragSrcIndex = null;
 

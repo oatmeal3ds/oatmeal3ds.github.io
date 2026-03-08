@@ -20,7 +20,7 @@ function oatHeader_Callback(html) {
 
   // Load progress data
   const progressScript = document.createElement('script');
-  progressScript.src = `https://oatmeal3ds.github.io/assets/progress.js?t=${Date.now()}`;
+  progressScript.src = `/assets/progress.js?t=${Date.now()}`;
   document.body.appendChild(progressScript);
 
   const header    = document.getElementById('main-header');
