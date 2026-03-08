@@ -1,6 +1,12 @@
 // This is a "wrapper" function that sends the data to your page
 oatSS_Callback([
   {
+    "title": "Migrated from Github Pages to Cloudflare Pages",
+    "date": "Mar 8, 2026",
+    "desc": "lol kinda ironic that most features are locked behind a damm domain",
+    "url": ""
+  },
+  {
     "title": "New admin panel",
     "date": "Mar 1, 2026",
     "desc": "Here on this admin panel I can make new news! need to add more features tho",
