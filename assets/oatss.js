@@ -98,13 +98,14 @@ function oatSS_Callback(data) {
     const banner = document.createElement('div');
     banner.id = 'oatss-announcement';
     banner.style.cssText = `
+      position:absolute;bottom:0;left:0;right:0;
       background:#1E90FF;color:white;padding:8px 16px;
       display:flex;align-items:center;justify-content:space-between;
-      font-size:0.85rem;gap:12px;`;
+      font-size:0.85rem;gap:12px;z-index:2;`;
     banner.innerHTML = `
       <span>${latest.t || latest.title || ''}</span>
-      <a href="${latest.u || latest.url || '#'}" style="color:white;font-weight:bold;white-space:nowrap;">Read More →</a>`;
-    hero.after(banner);
+      <a href="/news/#${latest.id || ''}" style="color:white;font-weight:bold;white-space:nowrap;">Read More →</a>`;
+    hero.appendChild(banner);
   }
 
   document.querySelectorAll('[data-oatss]').forEach(container => {
