@@ -83,6 +83,30 @@ function oatssOpenModal(post) {
 function oatSS_Callback(data) {
   window._oatssData = data;
 
+  // inject announcement banner below hero if announcement category exists
+  const announcements = data.filter(item => {
+    const cats = Array.isArray(item.c) ? item.c : (item.c ? [item.c] : []);
+    if (!cats.includes('announcement')) return false;
+    const d = new Date(item.dt || item.date || '');
+    if (isNaN(d)) return true; // no date = always show
+    return (new Date() - d) <= 7 * 86400000;
+  });
+  const hero = document.querySelector('.hero');
+  const existingBanner = document.getElementById('oatss-announcement');
+  if (announcements.length > 0 && hero && !existingBanner) {
+    const latest = announcements[0];
+    const banner = document.createElement('div');
+    banner.id = 'oatss-announcement';
+    banner.style.cssText = `
+      background:#1E90FF;color:white;padding:8px 16px;
+      display:flex;align-items:center;justify-content:space-between;
+      font-size:0.85rem;gap:12px;`;
+    banner.innerHTML = `
+      <span>${latest.t || latest.title || ''}</span>
+      <a href="${latest.u || latest.url || '#'}" style="color:white;font-weight:bold;white-space:nowrap;">Read More →</a>`;
+    hero.after(banner);
+  }
+
   document.querySelectorAll('[data-oatss]').forEach(container => {
     const cat    = container.dataset.oatss;
     const mode   = container.dataset.mode || 'complex';
