@@ -1,5 +1,8 @@
 // OATSS 1.2 — Cave Scrolls Engine
-// Load this on any page that needs news, then load news.js
+// Modes: simple (home page widget) | complex (full news page)
+// Usage:
+//   Simple:  <div data-oatss="all" data-mode="simple" data-limit="3" data-age="week"></div>
+//   Complex: <div data-oatss="all" data-mode="complex" data-paginate="5" data-search="true" data-filter="true"></div>
 
 // --- MARKDOWN PARSER ---
 function oatMD(text) {
@@ -29,7 +32,19 @@ function oatMD(text) {
     .replace(/\n{2,}/g, "<br><br>");
 }
 
-// --- MODAL ---
+// --- DATE AGE FILTER ---
+function oatAgeFilter(items, age) {
+  if (!age) return items;
+  const now = new Date();
+  const days = { recent: 3, week: 7, month: 30, year: 365 };
+  const cutoff = new Date(now - (days[age] || 7) * 86400000);
+  return items.filter(item => {
+    const d = new Date(item.dt || item.date || '');
+    return !isNaN(d) && d >= cutoff;
+  });
+}
+
+// --- MODAL (for complex mode) ---
 (function() {
   const modal = document.createElement('div');
   modal.id = 'oatss-modal';
@@ -49,49 +64,69 @@ function oatMD(text) {
       <div id="oatss-modal-body" style="color:#eee;line-height:1.8;"></div>
     </div>`;
   document.body.appendChild(modal);
-
   document.getElementById('oatss-close').addEventListener('click', () => modal.style.display = 'none');
   modal.addEventListener('click', e => { if (e.target === modal) modal.style.display = 'none'; });
 })();
 
 function oatssOpenModal(post) {
   document.getElementById('oatss-modal-body').innerHTML = `
-    <h2 style="margin-top:0;font-family:'Roboto',sans-serif;font-weight:100;letter-spacing:3px;">${post.t}</h2>
-    <p style="color:#777;font-size:0.8rem;margin-bottom:16px;">${post.dt} ${Array.isArray(post.c) ? '— ' + post.c.join(', ') : post.c ? '— ' + post.c : ''}</p>
-    ${oatMD(post.f || post.d)}`;
+    <h2 style="margin-top:0;font-family:'Roboto',sans-serif;font-weight:100;letter-spacing:3px;">${post.t || post.title || ''}</h2>
+    <p style="color:#777;font-size:0.8rem;margin-bottom:16px;">
+      ${post.dt || post.date || ''}
+      ${(post.c) ? '— ' + (Array.isArray(post.c) ? post.c.join(', ') : post.c) : ''}
+    </p>
+    ${oatMD(post.f || post.d || post.desc || '')}`;
   document.getElementById('oatss-modal').style.display = 'flex';
 }
 
-// --- RENDERER ---
+// --- MAIN CALLBACK ---
 function oatSS_Callback(data) {
   window._oatssData = data;
 
-  // find all feed containers on the page
   document.querySelectorAll('[data-oatss]').forEach(container => {
-    const cat = container.dataset.oatss;
-    const limit = container.dataset.limit ? parseInt(container.dataset.limit) : null;
-    const paginate = container.dataset.paginate ? parseInt(container.dataset.paginate) : null;
-    const showSearch = container.dataset.search === 'true';
-    const showFilter = container.dataset.filter === 'true';
+    const cat    = container.dataset.oatss;
+    const mode   = container.dataset.mode || 'complex';
+    const limit  = container.dataset.limit ? parseInt(container.dataset.limit) : null;
+    const age    = container.dataset.age || null;
+    const pag    = container.dataset.paginate ? parseInt(container.dataset.paginate) : null;
+    const search = container.dataset.search === 'true';
+    const filter = container.dataset.filter === 'true';
 
     // filter by category
-    let filtered = cat === 'all' || !cat
+    let items = (cat === 'all' || !cat)
       ? data
       : data.filter(item => {
-          const cats = Array.isArray(item.c) ? item.c : [item.c];
+          const cats = Array.isArray(item.c) ? item.c : (item.c ? [item.c] : []);
           return cats.includes(cat);
         });
 
-    // limit
-    if (limit) filtered = filtered.slice(0, limit);
+    // filter by age
+    if (age) items = oatAgeFilter(items, age);
 
-    renderFeed(container, filtered, paginate, showSearch, showFilter);
+    // limit
+    if (limit) items = items.slice(0, limit);
+
+    container.innerHTML = '';
+
+    if (mode === 'simple') {
+      renderSimple(container, items);
+    } else {
+      renderComplex(container, items, pag, search, filter);
+    }
   });
 }
 
-function renderFeed(container, data, paginate, showSearch, showFilter) {
-  container.innerHTML = '';
+// --- SIMPLE MODE ---
+function renderSimple(container, items) {
+  if (!items || items.length === 0) {
+    container.innerHTML = '<p style="color:#777;">No scrolls yet.</p>';
+    return;
+  }
+  items.forEach(item => container.appendChild(buildItem(item, false)));
+}
 
+// --- COMPLEX MODE ---
+function renderComplex(container, data, paginate, showSearch, showFilter) {
   // search + filter bar
   if (showSearch || showFilter) {
     const bar = document.createElement('div');
@@ -107,14 +142,11 @@ function renderFeed(container, data, paginate, showSearch, showFilter) {
 
     const searchInput = container.querySelector('.oatss-search');
     const filterSelect = container.querySelector('.oatss-filter');
-    const feed = document.createElement('div');
-    feed.className = 'oatss-feed';
-    container.appendChild(feed);
 
     function doSearch() {
       const query = searchInput ? searchInput.value.toLowerCase() : '';
       const field = filterSelect ? filterSelect.value : 'all';
-      feed.querySelectorAll('.news-item').forEach(item => {
+      container.querySelectorAll('.news-item').forEach(item => {
         const t = item.querySelector('.news-link')?.textContent.toLowerCase() || '';
         const d = item.querySelector('.news-desc')?.textContent.toLowerCase() || '';
         let match = false;
@@ -127,16 +159,15 @@ function renderFeed(container, data, paginate, showSearch, showFilter) {
 
     if (searchInput) searchInput.addEventListener('input', doSearch);
     if (filterSelect) filterSelect.addEventListener('change', doSearch);
-
-    renderItems(feed, data, paginate);
-  } else {
-    const feed = document.createElement('div');
-    feed.className = 'oatss-feed';
-    container.appendChild(feed);
-    renderItems(feed, data, paginate);
   }
+
+  const feed = document.createElement('div');
+  feed.className = 'oatss-feed';
+  container.appendChild(feed);
+  renderItems(feed, data, paginate);
 }
 
+// --- PAGINATED ITEMS ---
 function renderItems(feed, data, paginate) {
   if (!data || data.length === 0) {
     feed.innerHTML = '<p style="color:#777;">No scrolls yet.</p>';
@@ -151,47 +182,57 @@ function renderItems(feed, data, paginate) {
       page = p;
       const slice = data.slice((p - 1) * paginate, p * paginate);
       feed.innerHTML = '';
-      slice.forEach(item => feed.appendChild(buildItem(item)));
+      slice.forEach(item => feed.appendChild(buildItem(item, true)));
 
-      // pagination controls
       const pg = document.createElement('div');
       pg.style.cssText = 'display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap;';
-      pg.innerHTML = `<button onclick="void(0)" ${p === 1 ? 'disabled style="opacity:0.4"' : ''}>&#8249;</button>`;
-      for (let i = 1; i <= totalPages; i++) {
-        pg.innerHTML += `<button style="${i === p ? 'background:#fdd835;color:#111;' : ''}">${i}</button>`;
-      }
-      pg.innerHTML += `<button ${p === totalPages ? 'disabled style="opacity:0.4"' : ''}>&#8250;</button>`;
-      feed.appendChild(pg);
 
-      // wire buttons
-      const btns = pg.querySelectorAll('button');
-      btns[0].addEventListener('click', () => renderPage(page - 1));
-      btns[btns.length - 1].addEventListener('click', () => renderPage(page + 1));
-      const numbered = Array.from(btns).slice(1, -1);
-      numbered.forEach((btn, i) => btn.addEventListener('click', () => renderPage(i + 1)));
+      const prevBtn = document.createElement('button');
+      prevBtn.innerHTML = '&#8249;';
+      if (p === 1) { prevBtn.disabled = true; prevBtn.style.opacity = '0.4'; }
+      prevBtn.addEventListener('click', () => renderPage(page - 1));
+      pg.appendChild(prevBtn);
+
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement('button');
+        btn.textContent = i;
+        if (i === p) { btn.style.background = '#fdd835'; btn.style.color = '#111'; }
+        btn.addEventListener('click', () => renderPage(i));
+        pg.appendChild(btn);
+      }
+
+      const nextBtn = document.createElement('button');
+      nextBtn.innerHTML = '&#8250;';
+      if (p === totalPages) { nextBtn.disabled = true; nextBtn.style.opacity = '0.4'; }
+      nextBtn.addEventListener('click', () => renderPage(page + 1));
+      pg.appendChild(nextBtn);
+
+      feed.appendChild(pg);
     }
 
     renderPage(1);
   } else {
-    data.forEach(item => feed.appendChild(buildItem(item)));
+    data.forEach(item => feed.appendChild(buildItem(item, true)));
   }
 }
 
-function buildItem(item) {
+// --- BUILD ITEM ---
+function buildItem(item, allowExpand) {
   const div = document.createElement('div');
   div.className = 'news-item';
   const cats = Array.isArray(item.c) ? item.c : (item.c ? [item.c] : []);
+  const url = item.u || item.url || '';
   div.innerHTML = `
     <span class="news-date">${item.dt || item.date || ''}</span>
-    <a href="${item.u || item.url || '#'}" target="_blank" class="news-link">
+    <a href="${url}" target="_blank" class="news-link">
       ${item.t || item.title || 'Untitled'}
-      <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7rem;margin-left:5px;"></i>
+      ${url ? '<i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7rem;margin-left:5px;"></i>' : ''}
     </a>
     <p class="news-desc">${item.d || item.desc || ''}</p>
     ${cats.length ? `<p style="font-size:0.75rem;color:#555;margin:4px 0 0;">${cats.join(' · ')}</p>` : ''}
-    ${item.f ? `<button class="oatss-expand" style="margin-top:6px;font-size:11px;padding:2px 10px;">Read More</button>` : ''}`;
+    ${(allowExpand && item.f) ? `<button class="oatss-expand" style="margin-top:6px;font-size:11px;padding:2px 10px;">Read More</button>` : ''}`;
 
-  if (item.f) {
+  if (allowExpand && item.f) {
     div.querySelector('.oatss-expand').addEventListener('click', () => oatssOpenModal(item));
   }
   return div;
