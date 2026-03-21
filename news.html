@@ -27,22 +27,10 @@
   </div>
 
   <div style="padding-top: 10px;">
-      <div class="card">
-                    <div style="display:flex;gap:8px;">
-  <input type="text" id="news-search" placeholder="Search scrolls..." style="flex-grow:1;">
-  <select id="search-filter">
-    <option value="all">All</option>
-    <option value="title">Title</option>
-    <option value="desc">Description</option>
-  </select>
-</div>
-      </div>
     <details class="card" open>
       <summary>All Scrolls</summary>
       <div class="card-content">
-          <div id="news-feed">
-             <p style="color: #777;">Unrolling the scrolls...</p> 
-          </div>
+        <div data-oatss="all" data-mode="complex" data-paginate="5" data-search="true" data-filter="true"></div>
       </div>
     </details>
   </div>
@@ -60,58 +48,6 @@
     grecaptcha.ready(function() {
       grecaptcha.execute('6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU', {action: 'homepage'});
     });
-
-    // All news — no slice
-    function oatSS_Callback(scrolls) {
-      const feedContainer = document.getElementById('news-feed');
-      if (scrolls && scrolls.length > 0) {
-        feedContainer.innerHTML = '';
-        scrolls.forEach(item => {
-          feedContainer.innerHTML += `
-            <div class="news-item">
-              <span class="news-date">${item.date}</span>
-              <a href="${item.url}" target="_blank" class="news-link">
-                ${item.title} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7rem;margin-left:5px;"></i>
-              </a>
-              <p class="news-desc">${item.desc}</p>
-            </div>`;
-        });
-      } else {
-        feedContainer.innerHTML = '<p style="color:#777;">No scrolls yet.</p>';
-      }
-    }
-
-    function loadOatSS() {
-      const script = document.createElement('script');
-      script.src = `/news.js?t=${Date.now()}`;
-      document.body.appendChild(script);
-    }
-    loadOatSS();
-function highlight(text, query) {
-  if (!query) return text;
-  const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
-  return text.replace(regex, '<mark style="background:#fdd835;color:#111;border-radius:2px;">$1</mark>');
-}
-
-function doSearch() {
-  const query = document.getElementById('news-search').value.toLowerCase();
-  const filter = document.getElementById('search-filter').value;
-
-  document.querySelectorAll('.news-item').forEach(item => {
-    const title = item.querySelector('.news-link').textContent.toLowerCase();
-    const desc = item.querySelector('.news-desc').textContent.toLowerCase();
-
-    let match = false;
-    if (filter === 'all') match = title.includes(query) || desc.includes(query);
-    if (filter === 'title') match = title.includes(query);
-    if (filter === 'desc') match = desc.includes(query);
-
-    item.style.display = (!query || match) ? '' : 'none';
-  });
-}
-
-document.getElementById('news-search').addEventListener('input', doSearch);
-document.getElementById('search-filter').addEventListener('change', doSearch);
   </script>
 </body>
 </html>
