@@ -31,8 +31,9 @@
 
     <details class="card" open>
       <summary>Cave Scrolls</summary>
-      <div class="card-content" id="news-feed">
-        <p style="color: #777;">Unrolling the scrolls...</p>
+      <div class="card-content">
+        <div data-oatss="all" data-mode="simple" data-limit="3" data-age="week"></div>
+        <a href="/news"><button style="width:100%;margin-top:8px;">Read More</button></a>
       </div>
     </details>
 
@@ -101,69 +102,31 @@
       grecaptcha.execute('6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU', {action: 'homepage'});
     });
 
-    // Cave Scrolls
-    function oatSS_Callback(scrolls) {
-      const feedContainer = document.getElementById('news-feed');
-      feedContainer.innerHTML = '';
-
-      if (scrolls && scrolls.length > 0) {
-        const oneWeekAgo = new Date();
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-        const recentScrolls = scrolls.filter(item => new Date(item.date) >= oneWeekAgo);
-
-        if (recentScrolls.length > 0) {
-          recentScrolls.forEach(item => {
-            feedContainer.innerHTML += `
-              <div class="news-item">
-                <span class="news-date">${item.date}</span>
-                <a href="${item.url}" target="_blank" class="news-link">
-                  ${item.title} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7rem;margin-left:5px;"></i>
-                </a>
-                <p class="news-desc">${item.desc}</p>
-              </div>`;
-          });
-          feedContainer.innerHTML += `<a href="/news"><button style="width:100%;margin-top:8px;">Read More</button></a>`;
-        } else {
-          feedContainer.innerHTML = `
-            <p style="color:#777;">No news available at this moment.</p>
-            <a href="/news"><button style="width:100%;margin-top:8px;">Read Old News</button></a>`;
-        }
-      }
+    const hour = new Date().getHours();
+    let status;
+    if (hour >= 22 || hour < 7) {
+      status = "Oatmeal SHOULD be sleeping... Right?";
+    } else {
+      const statuses = [
+        "Oatmeal is finding some mice",
+        "Oatmeal is touching grass",
+        "Oatmeal is throwing doggos",
+        "Oatmeal is eating oatmeal",
+        "Oatmeal is debugging at 3am",
+        "Oatmeal is lost in the cave",
+        "Oatmeal is bouncing fish",
+        "Oatmeal is making games nobody asked for",
+        "Oatmeal is vibing with the mountain",
+        "Oatmeal is crying over a bug",
+        "Oatmeal is pretending to know JavaScript",
+        "Oatmeal is somewhere on the internet",
+        "Oatmeal has left the building",
+        "Oatmeal is currently unavailable",
+        "Oatmeal is trying to debug a damn toaster at 3am. Why though?",
+      ];
+      status = statuses[Math.floor(Math.random() * statuses.length)];
     }
-
-    function loadOatSS() {
-      const script = document.createElement('script');
-      script.src = `/news.js?t=${Date.now()}`;
-      document.body.appendChild(script);
-    }
-    loadOatSS();
- const hour = new Date().getHours();
-let status;
-
-if (hour >= 22 || hour < 7) {
-  status = "Oatmeal SHOULD be sleeping... Right?";
-} else {
-  const statuses = [
-    "Oatmeal is finding some mice",
-    "Oatmeal is touching grass",
-    "Oatmeal is throwing doggos",
-    "Oatmeal is eating oatmeal",
-    "Oatmeal is debugging at 3am",
-    "Oatmeal is lost in the cave",
-    "Oatmeal is bouncing fish",
-    "Oatmeal is making games nobody asked for",
-    "Oatmeal is vibing with the mountain",
-    "Oatmeal is crying over a bug",
-    "Oatmeal is pretending to know JavaScript",
-    "Oatmeal is somewhere on the internet",
-    "Oatmeal has left the building",
-    "Oatmeal is currently unavailable",
-    "Oatmeal is trying to debug a damn toaster at 3am. Why though?",
-  ];
-  status = statuses[Math.floor(Math.random() * statuses.length)];
-}
-
-document.getElementById('goofy-status').textContent = 'Status: ' + status;
+    document.getElementById('goofy-status').textContent = 'Status: ' + status;
   </script>
 </body>
 </html>
