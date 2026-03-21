@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Oatmeal's Cave</title>
+  <title>Admin</title>
   
   <script src="https://www.google.com/recaptcha/api.js?render=6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU"></script>
   
@@ -15,61 +15,62 @@
 
   <style>
     .drag-handle {
-  cursor: grab;
-  color: #555;
-  padding: 0 8px;
-  font-size: 1.2rem;
-  user-select: none;
-}
-.drag-handle:active { cursor: grabbing; }
-
-.item-header {
-  display: flex;
-  align-items: center;
-  margin-bottom: 8px;
-  gap: 8px;
-}
-.item-header b { flex-grow: 1; }
-
-.news-item-editor {
-  background: #1c1c1c;
-  border: 1px solid #333;
-  border-left: 3px solid #2e4d22;
-  padding: 12px;
-  margin-bottom: 10px;
-  transition: opacity 0.2s;
-}
-.news-item-editor.dragging { opacity: 0.4; }
-.news-item-editor.drag-over { border-top: 3px solid #fdd835; }
-
-input[type="date"] {
-  background: #1c1c1c;
-  border: 1px solid #333;
-  color: #eee;
-  padding: 6px 10px;
-  font-family: 'Open Sans', sans-serif;
-  font-size: 13px;
-  outline: none;
-  transition: border-color 0.2s;
-  color-scheme: dark;
-}
-input[type="date"]:hover { border-color: #4a7a36; }
-input[type="date"]:focus { border-color: #2e4d22; }
-
-input[type="text"], input[type="url"], textarea {
-  width: 100%;
-  margin-bottom: 6px;
-}
-
-#output-box {
-  background: #0d0d0d;
-  border: 1px solid #333;
-  color: #fdd835;
-  font-family: monospace;
-  font-size: 12px;
-  padding: 12px;
-  width: 100%;
-}
+      cursor: grab;
+      color: #555;
+      padding: 0 8px;
+      font-size: 1.2rem;
+      user-select: none;
+    }
+    .drag-handle:active { cursor: grabbing; }
+    .item-header {
+      display: flex;
+      align-items: center;
+      margin-bottom: 8px;
+      gap: 8px;
+    }
+    .item-header b { flex-grow: 1; }
+    .news-item-editor {
+      background: #1c1c1c;
+      border: 1px solid #333;
+      border-left: 3px solid #2e4d22;
+      padding: 12px;
+      margin-bottom: 10px;
+      transition: opacity 0.2s;
+    }
+    .news-item-editor.dragging { opacity: 0.4; }
+    .news-item-editor.drag-over { border-top: 3px solid #fdd835; }
+    input[type="date"] {
+      background: #1c1c1c;
+      border: 1px solid #333;
+      color: #eee;
+      padding: 6px 10px;
+      font-family: 'Open Sans', sans-serif;
+      font-size: 13px;
+      outline: none;
+      transition: border-color 0.2s;
+      color-scheme: dark;
+    }
+    input[type="date"]:hover { border-color: #4a7a36; }
+    input[type="date"]:focus { border-color: #2e4d22; }
+    input[type="text"], input[type="url"], textarea {
+      width: 100%;
+      margin-bottom: 6px;
+    }
+    #output-box {
+      background: #0d0d0d;
+      border: 1px solid #333;
+      color: #fdd835;
+      font-family: monospace;
+      font-size: 12px;
+      padding: 12px;
+      width: 100%;
+    }
+    .field-label {
+      color: #777;
+      font-size: 0.8rem;
+      margin-bottom: 2px;
+      display: block;
+    }
   </style>
 </head>
 <body>
@@ -86,36 +87,48 @@ input[type="text"], input[type="url"], textarea {
   </div>
 
   <div style="padding-top: 10px;">
-      <details class="card">
-          <summary>Edit Cave News</summary>
-          <div class="card-content">
-              
-        <p class="hero-sub" style="margin: 10px 0px; text-align: left;">Preview</p>
-        <div id="news-feed">
-          <p style="color: #777;">Unrolling the scrolls...</p>
+
+    <details class="card" open>
+      <summary>Edit Cave News</summary>
+      <div class="card-content">
+
+        <p class="hero-sub" style="margin:10px 0;text-align:left;">Preview</p>
+        <div id="news-preview" data-oatss="all" data-mode="complex" data-paginate="3">
+          <p style="color:#777;">Unrolling the scrolls...</p>
         </div>
 
-        <p class="hero-sub" style="margin: 10px 0px; text-align: left;">News Maker</p>
+        <p class="hero-sub" style="margin:10px 0;text-align:left;">News Maker</p>
         <button onclick="fetchNews()">Get News</button>
         <button onclick="addItem()">Add Item</button>
         <button onclick="generateOutput()">Get News Text</button>
-        <p id="status"></p>
+        <p id="status" style="font-size:0.85rem;color:#777;margin:6px 0;"></p>
 
         <div id="items-container"></div>
 
         <div id="output-section" style="display:none;">
           <h3>Copy this into news.js:</h3>
-          <textarea id="output-box" rows="20" cols="80" readonly></textarea><br>
+          <textarea id="output-box" rows="20" readonly></textarea><br>
           <button onclick="copyOutput()">Copy</button>
         </div>
-          </div>
-      </details>
-      <div class="card" style="text-align: center;">
-      <a href="https://www.google.com/recaptcha/admin/site/745843107"><button style="width: 95%; margin: 8px;">Open reCAPTCHA Dashboard</button></a>
-            <a href="/"><button style="width: 95%; margin: 8px;">Open Site</button></a>
-            <a href="https://github.com/oatmeal3ds/oatmeal3ds.github.io/tree/main"><button style="width: 95%; margin: 8px;">Open GitHub Repo</button></a>
+
       </div>
-          <details class="card">
+    </details>
+
+    <div class="card" style="text-align:center;">
+      <a href="https://www.google.com/recaptcha/admin/site/745843107" target="_blank"><button style="width:95%;margin:8px;">Open reCAPTCHA Dashboard</button></a>
+      <a href="/" target="_blank"><button style="width:95%;margin:8px;">Open Site</button></a>
+      <a href="https://github.com/oatmeal3ds/oatmeal3ds.github.io/tree/main" target="_blank"><button style="width:95%;margin:8px;">Open GitHub Repo</button></a>
+    </div>
+
+    <details class="card">
+      <summary>Download Templates</summary>
+      <div class="card-content">
+        <a href="https://raw.githubusercontent.com/oatmeal3ds/oatmeal3ds.github.io/refs/heads/main/assets/template.html"><button style="width:95%;margin:4px;">Download Template</button></a>
+        <a href="https://raw.githubusercontent.com/oatmeal3ds/oatmeal3ds.github.io/refs/heads/main/assets/samples.html"><button style="width:95%;margin:4px;">Download Card Samples</button></a>
+      </div>
+    </details>
+
+    <details class="card">
       <summary>About</summary>
       <div class="card-content">
         <p>This page is only for the administrator Oatmeal3ds. If you somehow got a copy of this page, please delete it immediately.</p>
@@ -124,14 +137,6 @@ input[type="text"], input[type="url"], textarea {
     </details>
 
   </div>
-
-  <details class="card">
-    <summary>Download Template</summary>
-    <div class="card-content">
-      <a href="https://raw.githubusercontent.com/oatmeal3ds/oatmeal3ds.github.io/refs/heads/main/assets/template.html"><button style="width: 95%; margin: 8px;">Download Template</button></a>
-      <a href="https://raw.githubusercontent.com/oatmeal3ds/oatmeal3ds.github.io/refs/heads/main/assets/samples.html"><button style="width: 95%; margin: 8px;">Download Card Samples</button></a>
-    </div>
-  </details>
 
   <footer id="site-footer"></footer>
 
@@ -146,59 +151,8 @@ input[type="text"], input[type="url"], textarea {
     grecaptcha.ready(function() {
       grecaptcha.execute('6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU', {action: 'homepage'});
     });
-        // --- NEWS DISPLAY (live feed preview) ---
-function oatSS_Callback(scrolls) {
-  allScrolls = [...scrolls].reverse();
-  renderPage(1);
-}
 
-function renderPage(page) {
-  currentPage = page;
-  const feedContainer = document.getElementById('news-feed');
-  const totalPages = Math.ceil(allScrolls.length / PAGE_SIZE);
-  const start = (page - 1) * PAGE_SIZE;
-  const pageItems = allScrolls.slice(start, start + PAGE_SIZE);
-
-  feedContainer.innerHTML = '';
-
-  if (pageItems.length === 0) {
-    feedContainer.innerHTML = '<p style="color:#777;">No scrolls yet.</p>';
-    return;
-  }
-
-  pageItems.forEach(item => {
-    feedContainer.innerHTML += `
-      <div class="news-item">
-        <span class="news-date">${item.date}</span>
-        <a href="${item.url}" target="_blank" class="news-link">
-          ${item.title} <i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7rem;margin-left:5px;"></i>
-        </a>
-        <p class="news-desc">${item.desc}</p>
-      </div>`;
-  });
-
-  let pagination = '<div style="display:flex;align-items:center;gap:8px;margin-top:12px;flex-wrap:wrap;">';
-  pagination += `<button onclick="renderPage(${page - 1})" ${page === 1 ? 'disabled style="opacity:0.4"' : ''}>&#8249;</button>`;
-  for (let i = 1; i <= totalPages; i++) {
-    pagination += `<button onclick="renderPage(${i})" style="${i === page ? 'background:#fdd835;color:#111;' : ''}">${i}</button>`;
-  }
-  pagination += `<button onclick="renderPage(${page + 1})" ${page === totalPages ? 'disabled style="opacity:0.4"' : ''}>&#8250;</button>`;
-  pagination += '</div>';
-  feedContainer.innerHTML += pagination;
-}
-
-function loadOatSS() {
-  const script = document.createElement('script');
-  script.src = `/news.js?t=${Date.now()}`;
-  document.body.appendChild(script);
-}
-
-let allScrolls = [];
-let currentPage = 1;
-const PAGE_SIZE = 2;
-
-loadOatSS();
-        // --- NEWS EDITOR ---
+    // --- NEWS EDITOR ---
     const NEWS_URL = '/news.js';
     let items = [];
     let dragSrcIndex = null;
@@ -211,7 +165,6 @@ loadOatSS();
         renderItems();
         document.getElementById('status').textContent = `Loaded ${items.length} item(s).`;
         window.oatSS_Callback = prev;
-        loadOatSS();
       };
       const old = document.getElementById('news-script');
       if (old) old.remove();
@@ -221,20 +174,11 @@ loadOatSS();
       document.body.appendChild(script);
     }
 
-    // Convert "Feb 27, 2026" → "2026-02-27" for date input
     function toInputDate(str) {
       if (!str) return '';
       const d = new Date(str);
       if (isNaN(d)) return '';
       return d.toISOString().split('T')[0];
-    }
-
-    // Convert "2026-02-27" → "Feb 27, 2026" for output
-    function toDisplayDate(str) {
-      if (!str) return '';
-      const d = new Date(str + 'T00:00:00');
-      if (isNaN(d)) return str;
-      return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
     }
 
     function renderItems() {
@@ -245,16 +189,36 @@ loadOatSS();
         div.className = 'news-item-editor';
         div.draggable = true;
         div.dataset.index = i;
+
+        // support both old and new format
+        const title = item.t || item.title || '';
+        const date  = item.dt || item.date || '';
+        const desc  = item.d || item.desc || '';
+        const url   = item.u || item.url || '';
+        const cats  = Array.isArray(item.c) ? item.c.join(', ') : (item.c || '');
+        const id    = item.id || '';
+        const full  = item.f || '';
+
         div.innerHTML = `
           <div class="item-header">
             <span class="drag-handle" title="Drag to reorder">⠿</span>
             <b>Item ${i + 1}</b>
             <button onclick="removeItem(${i})">Remove</button>
           </div>
-          Title: <input type="text" id="title-${i}" value="${esc(item.title || '')}"><br>
-          Date: <input type="date" id="date-${i}" value="${toInputDate(item.date)}"><br>
-          Desc: <textarea id="desc-${i}">${esc(item.desc || '')}</textarea>
-          URL: <input type="url" id="url-${i}" value="${esc(item.url || '')}">`;
+          <span class="field-label">ID</span>
+          <input type="text" id="id-${i}" value="${esc(id)}" placeholder="unique-id"><br>
+          <span class="field-label">Title</span>
+          <input type="text" id="title-${i}" value="${esc(title)}"><br>
+          <span class="field-label">Date</span>
+          <input type="date" id="date-${i}" value="${toInputDate(date)}"><br>
+          <span class="field-label">Description (short)</span>
+          <textarea id="desc-${i}">${esc(desc)}</textarea>
+          <span class="field-label">URL</span>
+          <input type="url" id="url-${i}" value="${esc(url)}"><br>
+          <span class="field-label">Categories (comma separated, e.g. site, feature, announcement)</span>
+          <input type="text" id="cats-${i}" value="${esc(cats)}" placeholder="site, feature"><br>
+          <span class="field-label">Full Content (markdown, optional)</span>
+          <textarea id="full-${i}" rows="4" placeholder="# Title\n\nFull article in markdown...">${esc(full)}</textarea>`;
 
         div.addEventListener('dragstart', () => {
           dragSrcIndex = i;
@@ -283,13 +247,13 @@ loadOatSS();
       });
     }
 
-function addItem() {
-  const today = new Date().toISOString().split('T')[0];
-  items.unshift({ title: '', date: today, desc: '', url: '' });
-  renderItems();
-  const cards = document.querySelectorAll('.news-item-editor');
-  if (cards.length) cards[0].scrollIntoView({ behavior: 'smooth' });
-}
+    function addItem() {
+      const today = new Date().toISOString().split('T')[0];
+      items.unshift({ id: '', t: '', dt: today, d: '', u: '', c: [], f: '' });
+      renderItems();
+      const cards = document.querySelectorAll('.news-item-editor');
+      if (cards.length) cards[0].scrollIntoView({ behavior: 'smooth' });
+    }
 
     function removeItem(i) {
       collectItems();
@@ -298,19 +262,25 @@ function addItem() {
     }
 
     function collectItems() {
-      items = items.map((_, i) => ({
-        title: document.getElementById(`title-${i}`)?.value || '',
-        date:  toDisplayDate(document.getElementById(`date-${i}`)?.value || ''),
-        desc:  document.getElementById(`desc-${i}`)?.value || '',
-        url:   document.getElementById(`url-${i}`)?.value || '',
-      }));
+      items = items.map((_, i) => {
+        const catsRaw = document.getElementById(`cats-${i}`)?.value || '';
+        const cats = catsRaw.split(',').map(s => s.trim()).filter(Boolean);
+        const full = document.getElementById(`full-${i}`)?.value || '';
+        return {
+          id:  document.getElementById(`id-${i}`)?.value || '',
+          t:   document.getElementById(`title-${i}`)?.value || '',
+          dt:  document.getElementById(`date-${i}`)?.value || '',
+          d:   document.getElementById(`desc-${i}`)?.value || '',
+          u:   document.getElementById(`url-${i}`)?.value || '',
+          c:   cats,
+          ...(full ? { f: full } : {})
+        };
+      });
     }
 
     function generateOutput() {
       collectItems();
-      const output =
-`// This is a "wrapper" function that sends the data to your page
-oatSS_Callback(${JSON.stringify(items, null, 2)});`;
+      const output = `// This is a "wrapper" function that sends the data to your page\noatSS_Callback(${JSON.stringify(items, null, 2)});`;
       document.getElementById('output-box').value = output;
       document.getElementById('output-section').style.display = 'block';
       document.getElementById('output-section').scrollIntoView({ behavior: 'smooth' });
