@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Template</title>
+  
+  <script src="https://www.google.com/recaptcha/api.js?render=6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU"></script>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:wght@100&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+  <link rel="stylesheet" href="https://oatmeal3ds.pages.dev/assets/elevatedmountains.css">
+  <style>
+    /* Page-specific styles go here */
+  </style>
+</head>
+<body>
+
+  <div id="menu-overlay"></div>
+  <div id="site-header"></div>
+
+  <div class="hero">
+    <div class="hero-bg" id="hero-bg"></div>
+    <div style="z-index: 1;">
+      <h1 class="hero-title">News test</h1>
+      <p class="hero-sub">Test the news</p>
+    </div>
+  </div>
+
+  <div style="padding-top: 10px;">
+<p class='hero-sub'>Full news</p>
+<div class="card">
+<div data-oatss="all" data-mode="complex" data-paginate="5" data-search="true" data-filter="true"></div>
+</div>
+<p class='hero-sub'>Simple news</p>
+<div class="card">
+    <div data-oatss="all" data-mode="simple" data-limit="3" data-age="week"></div>
+</div>
+<p class='hero-sub'>Filtered news (announcements)</p>
+<div class="card">
+<div data-oatss="announcement" data-mode="simple" data-limit="1"></div>
+</div>
+  </div>
+
+  <footer id="site-footer"></footer>
+<script src="https://oatmeal3ds.pages.dev/assets/oatss.js"></script>
+  <script>
+      function loadOatSS() {
+  const script = document.createElement('script');
+  script.src = `https://oatmeal3ds.pages.dev/news.js?t=${Date.now()}`;
+  document.body.appendChild(script);
+}
+loadOatSS();
+    function loadOatLayout() {
+      const script = document.createElement('script');
+      script.src = `https://oatmeal3ds.pages.dev/assets/layout.js?t=${Date.now()}`;
+      document.body.appendChild(script);
+    }
+    loadOatLayout();
+
+    grecaptcha.ready(function() {
+      grecaptcha.execute('6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU', {action: 'homepage'});
+    });
+  </script>
+</body>
+</html>
