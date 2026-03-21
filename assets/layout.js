@@ -34,6 +34,16 @@ function oatHeader_Callback(html) {
     const href = link.getAttribute('href').replace(/\/$/, '') || '/';
     if (href === path || (href !== '/' && path.startsWith(href))) {
       link.classList.add('active');
+
+      // load oatss engine then news for announcement banner
+  const oatssScript = document.createElement('script');
+  oatssScript.src = '/assets/oatss.js';
+  oatssScript.onload = () => {
+    const newsScript = document.createElement('script');
+    newsScript.src = `/news.js?t=${Date.now()}`;
+    document.body.appendChild(newsScript);
+  };
+  document.body.appendChild(oatssScript);
     }
   });
 
