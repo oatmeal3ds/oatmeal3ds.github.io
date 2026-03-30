@@ -1,1 +1,604 @@
-sample
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<title>Cave Editor — Oatnable</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+
+<style>
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    height: 100vh;
+    display: flex;
+    color: #eee;
+    font-family: system-ui, sans-serif;
+    overflow: hidden;
+  }
+
+  /* Sidebar */
+  #sidebar {
+    width: 220px;
+    background: transparent;
+    border-right: 1px solid #333;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    transition: width .2s ease;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+
+  #sidebar.hidden {
+    width: 0;
+    padding: 10px 0;
+    overflow: hidden;
+    border-right: none;
+  }
+
+  #sidebar button {
+    margin: 2px 0;
+    padding: 1px 4px;
+    background: none;
+    border: 1px solid transparent;
+    color: #888;
+    cursor: pointer;
+    text-align: left;
+    border-radius: 0;
+    white-space: nowrap;
+    font-family: monospace;
+    font-size: 12px;
+    line-height: 1.4;
+    display: block;
+    width: 100%;
+  }
+
+  #sidebar button:hover {
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(255,255,255,0.15);
+    color: #ccc;
+  }
+
+  #sidebar button i {
+    margin-right: 6px;
+    opacity: 0.9;
+  }
+
+  #sidebar-spacer { 
+      flex: 1; 
+  }
+
+  #btn-toggle {
+    margin-top: 4px;
+    border-top: 1px solid #333 !important;
+    padding-top: 5px !important;
+    color: #666 !important;
+  }
+
+  #main {
+    flex: 1;
+    display: flex;
+    min-width: 0;
+  }
+
+  #editor-pane {
+    width: 50%;
+    height: 100%;
+    overflow: hidden;
+  }
+
+  #preview-pane {
+    height: 100%;
+    flex: 1;
+    background: white;
+    overflow: hidden;
+  }
+
+  #editor {
+    width: 100%;
+    height: 100%;
+  }
+
+  iframe { width: 100%; height: 100%; border: none; }
+
+  #divider {
+    width: 6px;
+    background: #333;
+    cursor: col-resize;
+    flex-shrink: 0;
+  }
+
+  #divider:hover { background: #555; }
+
+  #sidebar-pill {
+    position: fixed;
+    top: 50%;
+    left: -48px;
+    transform: translateY(-50%);
+    transition: left .2s ease;
+    z-index: 200;
+    writing-mode: vertical-rl;
+    text-orientation: mixed;
+    background: #2a2a2a;
+    border: 1px solid #555;
+    border-left: none;
+    border-radius: 0 20px 20px 0;
+    color: #aaa;
+    font-family: monospace;
+    font-size: 11px;
+    padding: 10px 4px;
+    cursor: pointer;
+    line-height: 1;
+    letter-spacing: 0.05em;
+    user-select: none;
+  }
+  #sidebar-pill:hover { background: #3a3a3a; color: #eee; }
+  body.sidebar-hidden #sidebar-pill { left: 0; }
+  
+  /* Title — replaces the old h3#title */
+  #title {
+    margin: 2px 0 8px 0;
+    font-family: "Roboto", sans-serif;
+    font-size: 15px;
+    font-weight: 600;
+    color: #bbb;
+    white-space: nowrap;
+  }
+
+  #footer {
+    text-align: center;
+    margin: 6px 0 8px 0;
+    font-size: smaller;
+    font-family: "Open Sans", sans-serif;
+    opacity: 0.85;
+  }
+
+  #footer a {
+    color: dodgerblue;
+    text-decoration: underline;
+  }
+
+  .sidebar-separator {
+    border: none;
+    border-top: 1px solid #333;
+    margin: 8px 0;
+    opacity: 0.5;
+  }
+
+  /* Dropdown */
+  .dropdown {
+    margin-left: 4px;
+    border-left: 1px solid #333;
+    padding-left: 6px;
+    display: flex;
+    flex-direction: column;
+    max-height: 120px;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .dropdown.hidden {
+    display: none;
+  }
+
+  .dropdown-item {
+    margin: 2px 0;
+    padding: 1px 4px;
+    background: none;
+    border: 1px solid transparent;
+    color: #888;
+    cursor: pointer;
+    text-align: left;
+    font-family: monospace;
+    font-size: 12px;
+  }
+
+  .dropdown-item:hover {
+    background: rgba(255,255,255,0.07);
+    border-color: rgba(255,255,255,0.15);
+    color: #ccc;
+  }
+
+  .dropdown-item.disabled {
+    opacity: 0.4;
+    cursor: default;
+  }
+</style>
+</head>
+
+<body>
+
+<button id="sidebar-pill" title="Show Sidebar">panel »</button>
+
+<div id="sidebar">
+  <div id="title">
+    Cave Editor
+  </div>
+
+  <button onclick="window.location.href='/'"><i class="fa-solid fa-house"></i>Home</button>
+  <hr class="sidebar-separator">
+
+  <button id="btn-preview"><i class="fa-solid fa-rotate-right"></i>Refresh Preview</button>
+  <button id="btn-newtab"><i class="fa-solid fa-arrow-up-right-from-square"></i>Open in New Tab</button>
+  <button id="btn-clear"><i class="fa-solid fa-xmark"></i>Clear</button>
+
+  <button id="btn-templates">
+    <i class="fa-solid fa-layer-group"></i>Templates <i class="fa-solid fa-caret-down"></i>
+  </button>
+
+  <div id="templates-dropdown" class="dropdown hidden">
+    <span class="dropdown-item disabled" id="templates-loading">Loading…</span>
+  </div>
+
+  <hr class="sidebar-separator">
+
+  <button id="btn-load"><i class="fa-solid fa-file-arrow-up"></i>Load File</button>
+  <button id="btn-download"><i class="fa-solid fa-download"></i>Download</button>
+  <button id="btn-beautify"><i class="fa-solid fa-wand-magic-sparkles"></i>Beautify</button>
+
+  <hr class="sidebar-separator">
+
+  <button id="btn-theme"><i class="fa-solid fa-palette"></i>Theme <i class="fa-solid fa-caret-down"></i></button>
+  <div id="theme-dropdown" class="dropdown hidden">
+    <button class="dropdown-item" data-theme="ace/theme/ambiance">Ambiance</button>
+    <button class="dropdown-item" data-theme="ace/theme/monokai">Monokai</button>
+    <button class="dropdown-item" data-theme="ace/theme/dracula">Dracula</button>
+    <button class="dropdown-item" data-theme="ace/theme/tomorrow_night">Tomorrow Night</button>
+    <button class="dropdown-item" data-theme="ace/theme/tomorrow_night_blue">Tomorrow Night Blue</button>
+    <button class="dropdown-item" data-theme="ace/theme/nord_dark">Nord Dark</button>
+    <button class="dropdown-item" data-theme="ace/theme/solarized_dark">Solarized Dark</button>
+    <button class="dropdown-item" data-theme="ace/theme/solarized_light">Solarized Light</button>
+    <button class="dropdown-item" data-theme="ace/theme/github">GitHub</button>
+    <button class="dropdown-item" data-theme="ace/theme/github_dark">GitHub Dark</button>
+    <button class="dropdown-item" data-theme="ace/theme/gruvbox">Gruvbox</button>
+    <button class="dropdown-item" data-theme="ace/theme/one_dark">One Dark</button>
+  </div>
+
+  <div id="sidebar-spacer"></div>
+
+  <p id="footer">Powered by <a href="https://ace.c9.io">Ace</a></p>
+  <button id="btn-toggle">« Hide Sidebar</button>
+</div>
+
+<div id="main">
+  <div id="editor-pane">
+    <div id="editor"></div>
+  </div>
+  <div id="divider"></div>
+  <div id="preview-pane">
+    <iframe id="preview"></iframe>
+  </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.3/ace.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.3/ext-language_tools.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.9/beautify-html.min.js"></script>
+
+<script>
+    const ACE_CDN = "https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.3";
+    const loadedThemes = new Set();
+    let CODELAB_THEME = "ace/theme/ambiance";
+
+    function setCodeLabTheme(themeName) {
+      const name = themeName.split("/").pop();
+      CODELAB_THEME = themeName;
+      if (loadedThemes.has(name)) {
+        editor.setTheme(themeName);
+        requestAnimationFrame(() => requestAnimationFrame(syncAceTheme));
+        return;
+      }
+      const script = document.createElement("script");
+      script.src = `${ACE_CDN}/theme-${name}.min.js`;
+      script.onload = () => {
+        loadedThemes.add(name);
+        editor.setTheme(themeName);
+        requestAnimationFrame(() => requestAnimationFrame(syncAceTheme));
+      };
+      script.onerror = () => console.warn("Failed to load theme: " + name);
+      document.head.appendChild(script);
+    }
+
+    // setCodeLabTheme() is called after editor is initialized below
+
+/* --------------------------
+   ACE SETUP
+--------------------------- */
+const editor = ace.edit("editor");
+editor.session.setUseWorker(false);
+editor.session.setMode("ace/mode/html");
+editor.setOption("copyWithEmptySelection", true);
+editor.setOptions({
+  enableBasicAutocompletion: true,
+  enableLiveAutocompletion: true,
+  enableSnippets: true,
+  fontSize: "14px",
+  showPrintMargin: false,
+  tabSize: 2,
+  useSoftTabs: true
+});
+// Load and apply the default theme dynamically
+setCodeLabTheme(CODELAB_THEME);
+
+/* --------------------------
+   THEME SYNC (MERGED LAYERS)
+--------------------------- */
+function syncAceTheme() {
+  const gutterEl  = document.querySelector(".ace_gutter");
+  const layerEl   = document.querySelector(".ace_gutter-layer");
+  const editorEl  = document.querySelector(".ace_editor");
+  const scrollEl  = document.querySelector(".ace_scroller");
+
+  if (!gutterEl || !layerEl || !editorEl || !scrollEl) {
+    return requestAnimationFrame(syncAceTheme);
+  }
+
+  const gc = getComputedStyle(gutterEl);
+  const gn = getComputedStyle(layerEl);
+  const ed = getComputedStyle(editorEl);
+  const sc = getComputedStyle(scrollEl);
+
+  // .ace_editor always has the theme's base bg color
+  const editorBg = ed.backgroundColor;
+  // gutter may be transparent on themes like gruvbox/nord_dark — fall back to editor bg
+  const gutterBg = isTransparent(gc.backgroundColor) ? editorBg : gc.backgroundColor;
+  const gutterImg = isTransparent(gc.backgroundColor) ? "none" : gn.backgroundImage;
+
+  applyTheme({
+    gutterBgColor: gutterBg,
+    gutterBgImage: gutterImg,
+    gutterRepeat:  gn.backgroundRepeat,
+    gutterSize:    gn.backgroundSize,
+    gutterBorder:  gc.borderRightColor,
+    scrollerBg:    sc.backgroundColor,
+    gutterColor:   gc.color,
+  });
+}
+
+function isTransparent(color) {
+  return !color || color === "transparent" || color === "rgba(0, 0, 0, 0)";
+}
+
+function applyTheme(t) {
+  const targets = [
+    document.body,
+    document.getElementById("sidebar"),
+    document.getElementById("sidebar-pill"),
+    document.getElementById("divider")
+  ];
+
+  for (const el of targets) {
+    if (!el) continue;
+    el.style.backgroundColor = t.gutterBgColor;
+    el.style.backgroundImage = t.gutterBgImage;
+    el.style.backgroundRepeat = t.gutterRepeat;
+    el.style.backgroundSize = t.gutterSize;
+    /* color and borderColor intentionally not set — gutter text is #222 which kills sidebar readability */
+  }
+
+  const divider = document.getElementById("divider");
+  if (divider) divider.style.backgroundColor = t.gutterBorder;
+
+  const css = `
+    ::-webkit-scrollbar { width: 10px; }
+    ::-webkit-scrollbar-track { background: ${t.scrollerBg}; }
+    ::-webkit-scrollbar-thumb { background: ${t.gutterBorder}; }
+    ::-webkit-scrollbar-thumb:hover { background: ${t.gutterColor}; }
+  `;
+
+  let style = document.getElementById("ace-theme-sync");
+  if (!style) {
+    style = document.createElement("style");
+    style.id = "ace-theme-sync";
+    document.head.appendChild(style);
+  }
+  style.textContent = css;
+}
+
+syncAceTheme();
+editor.on("changeTheme", () => requestAnimationFrame(() => requestAnimationFrame(syncAceTheme)));
+
+/* --------------------------
+   PREVIEW
+--------------------------- */
+const iframe = document.getElementById("preview");
+
+function updatePreview() {
+  const doc = iframe.contentDocument || iframe.contentWindow.document;
+  if (!doc) return;
+  doc.open();
+  doc.write(editor.getValue());
+  doc.close();
+}
+
+editor.session.on("change", updatePreview);
+setTimeout(updatePreview, 0);
+
+/* --------------------------
+   BUTTONS
+--------------------------- */
+document.getElementById("btn-preview").onclick = updatePreview;
+
+document.getElementById("btn-newtab").onclick = () => {
+  const win = window.open("about:blank", "_blank");
+  if (!win) return alert("Popup blocked.");
+  win.document.open();
+  win.document.write(editor.getValue());
+  win.document.close();
+};
+
+document.getElementById("btn-clear").onclick = () => editor.setValue("", -1);
+
+/* --------------------------
+   TEMPLATES DROPDOWN
+--------------------------- */
+/* --------------------------
+   TEMPLATES DROPDOWN
+--------------------------- */
+const templatesBtn      = document.getElementById("btn-templates");
+const templatesDropdown = document.getElementById("templates-dropdown");
+const TEMPLATES_BASE = "https://oatmeal3ds.pages.dev/cave-editor/templates/";
+let templatesLoaded = false;
+
+templatesBtn.onclick = () => {
+  templatesDropdown.classList.toggle("hidden");
+  if (!templatesLoaded) loadTemplates();
+};
+
+async function loadTemplates() {
+  const loadingEl = document.getElementById("templates-loading");
+  try {
+    const res = await fetch(TEMPLATES_BASE + "_index.json");
+    if (!res.ok) throw new Error("Failed to fetch _index.json");
+    const list = await res.json();
+
+    templatesDropdown.innerHTML = "";
+
+    if (list.length === 0) {
+      templatesDropdown.innerHTML = '<span class="dropdown-item disabled">No templates yet</span>';
+      return;
+    }
+
+    list.forEach(({ name, file }) => {
+      const btn = document.createElement("button");
+      btn.className = "dropdown-item";
+      btn.textContent = name;
+      btn.onclick = async () => {
+        btn.textContent = "Loading…";
+        btn.classList.add("disabled");
+        try {
+          const r = await fetch(TEMPLATES_BASE + file);
+          if (!r.ok) throw new Error("Failed to fetch template");
+          const html = await r.text();
+          editor.setValue(html, -1);
+          templatesDropdown.classList.add("hidden");
+        } catch (e) {
+          btn.textContent = name + " (error)";
+          btn.classList.remove("disabled");
+        }
+      };
+      templatesDropdown.appendChild(btn);
+    });
+
+    templatesLoaded = true;
+  } catch (e) {
+    templatesDropdown.innerHTML = '<span class="dropdown-item disabled">Failed to load</span>';
+    console.warn("Templates error:", e);
+  }
+}
+
+/* --------------------------
+   LOAD FILE
+--------------------------- */
+document.getElementById("btn-load").onclick = () => {
+  const input = document.createElement("input");
+  input.type = "file";
+  input.accept = ".html,.htm,.txt";
+  input.onchange = () => {
+    const file = input.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = e => editor.setValue(e.target.result, -1);
+    reader.readAsText(file);
+  };
+  input.click();
+};
+
+/* --------------------------
+   DOWNLOAD
+--------------------------- */
+document.getElementById("btn-download").onclick = () => {
+  const blob = new Blob([editor.getValue()], { type: "text/html" });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "index.html";
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+/* --------------------------
+   BEAUTIFY
+--------------------------- */
+document.getElementById("btn-beautify").onclick = () => {
+  const pretty = html_beautify(editor.getValue(), {
+    indent_size: 2,
+    wrap_line_length: 80,
+    preserve_newlines: true
+  });
+  editor.setValue(pretty, -1);
+};
+
+/* --------------------------
+   THEME DROPDOWN
+--------------------------- */
+const themeBtn      = document.getElementById("btn-theme");
+const themeDropdown = document.getElementById("theme-dropdown");
+
+themeBtn.onclick = () => themeDropdown.classList.toggle("hidden");
+
+document.querySelectorAll(".dropdown-item[data-theme]").forEach(item => {
+  item.onclick = () => {
+    setCodeLabTheme(item.dataset.theme);
+    // Mark active
+    document.querySelectorAll(".dropdown-item[data-theme]").forEach(i => i.style.color = "");
+    item.style.color = "#ccc";
+    themeDropdown.classList.add("hidden");
+  };
+});
+
+/* --------------------------
+   SIDEBAR TOGGLE
+--------------------------- */
+const sidebar = document.getElementById("sidebar");
+const sidebarPill = document.getElementById("sidebar-pill");
+
+function toggleSidebar() {
+  const hiding = !sidebar.classList.contains("hidden");
+  sidebar.classList.toggle("hidden", hiding);
+  document.body.classList.toggle("sidebar-hidden", hiding);
+  document.getElementById("btn-toggle").textContent =
+    hiding ? "» Show Sidebar" : "« Hide Sidebar";
+  setTimeout(() => editor.resize(), 220);
+}
+
+document.getElementById("btn-toggle").onclick = toggleSidebar;
+sidebarPill.onclick = toggleSidebar;
+
+/* --------------------------
+   DRAG DIVIDER
+--------------------------- */
+const divider = document.getElementById("divider");
+const editorPane = document.getElementById("editor-pane");
+let dragging = false;
+
+divider.addEventListener("mousedown", (e) => {
+  dragging = true;
+  document.body.style.cursor = "col-resize";
+  e.preventDefault();
+});
+
+window.addEventListener("mousemove", (e) => {
+  if (!dragging) return;
+  const rect = document.getElementById("main").getBoundingClientRect();
+  const x = e.clientX - rect.left;
+  const width = Math.min(Math.max(x, 150), rect.width - 150);
+  editorPane.style.width = width + "px";
+  editor.resize();
+});
+
+window.addEventListener("mouseup", () => {
+  if (!dragging) return;
+  dragging = false;
+  document.body.style.cursor = "default";
+  editor.resize();
+});
+</script>
+</body>
+</html>
