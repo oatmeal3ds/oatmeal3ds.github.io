@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Your Site</title> <!--The title of your site-->
+<style>
+body {
+margin: 0;
+font-family: Open Sans, sans-serif;
+background: #fafafa;
+}
+
+.site-header {
+padding: 30px;
+background: #f5f5f5;
+border-bottom: 1px solid #ddd;
+}
+
+.card-grid {
+display: grid;
+grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+gap: 16px;
+padding: 20px;
+}
+/* Card container */
+.card {
+background: white;
+border-radius: 0px;
+box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+padding: 0px 16px;
+overflow: hidden;
+}
+/* Summary (clickable header) */
+.card summary {
+padding: 16px 0px;
+cursor: pointer;
+font-weight: bold;
+list-style: none;
+position: relative;
+}
+
+/* Remove default arrow */
+.card summary::-webkit-details-marker {
+display: none;
+}
+
+/* Custom arrow */
+.card summary::after {
+content: "▾";
+position: absolute;
+right: 16px;
+top: 16px;
+transform: rotate(90deg); /* start pointing right */
+transition: transform 0.25s ease;
+}
+
+details[open] summary::after {
+transform: rotate(0deg);
+}
+.card-content {
+overflow: hidden;
+padding: 8px;
+border-top: 1px solid #eee;
+max-height: 0;
+opacity: 0;
+}
+
+details[open] .card-content {
+max-height: 1000px;
+opacity: 1;
+padding: 8px;
+}
+
+.site-footer {
+padding: 20px;
+background: #f5f5f5;
+border-top: 1px solid #ddd;
+text-align: center;
+font-family: Open Sans, sans-serif;
+color: #555;
+}
+html, body {
+height: 100%;
+}
+
+body {
+display: flex;
+flex-direction: column;
+}
+
+.site-footer {
+margin-top: auto;
+}
+/* DARK MODE */
+body.dark {
+background: #111;
+color: #eee;
+}
+
+body.dark .site-header {
+background: #1a1a1a;
+border-bottom: 1px solid #333;
+}
+
+body.dark .card {
+background: #1c1c1c;
+box-shadow: 0 2px 6px rgba(0,0,0,0.6);
+}
+
+body.dark .card summary {
+color: #fff;
+}
+
+body.dark .card-content {
+border-top: 1px solid #333;
+color: #ddd;
+}
+body.dark .site-footer {
+background: #1c1c1c;
+color: #ccc;
+border-top: 1px solid #333;
+}
+.construction-tape {
+width: 100%;
+padding: 5px 0;
+text-align: center;
+font-weight: bold;
+color: white;
+
+/* The diagonal stripes */
+background: repeating-linear-gradient(
+-45deg,
+#fdd835 0,
+#fdd835 20px,
+#000 20px,
+#000 40px
+);
+
+/* Make the background bigger so it can slide */
+background-size: 200% 100%;
+
+/* The animation */
+animation: slideTape 0.5s linear infinite;
+}
+
+/* The actual animation */
+@keyframes slideTape {
+from {
+background-position: 0 0;
+}
+to {
+background-position: -55px 0;
+}
+}
+</style>
+</head>
+<body class="dark"> <!--Changing this breaks your site. Use the one on the script to change from dark to light-->
+<header class="site-header">
+<h1>Kards</h1> <!--Title-->
+<p>A template made by Oatmeal Plays</p> <!--Subtitle-->
+</header>
+
+
+<div class="construction-tape">CONSTRUCTION TAPE</div> <!--Construction Tape-->
+
+
+<details class="card"> <!-- Details card-->
+<summary>Dropdown</summary> <!--Summary-->
+<div class="card-content"> <!--Content-->
+    <p>This is a dropdown!</p> 
+</div>
+</details>
+
+
+<div class="card">
+<p>Place anything on this simple card!</p> <!--Simple Card-->
+</div>
+
+
+<footer class="site-footer">
+<p>© Oatmeal Plays — All rights reserved.</p> <!--Footer (Please give rights for this)-->
+</footer>
+<script>
+let darkMode = true; // change to true to force dark mode, or use false for light mode
+
+function applyTheme() {
+if (darkMode) {
+document.body.classList.add("dark");
+} else {
+document.body.classList.remove("dark");
+}
+}
+
+applyTheme();
+</script>
+</body>
+</html>
