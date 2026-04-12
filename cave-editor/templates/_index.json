@@ -1,4 +1,5 @@
 [
-  { "name": "Kards", "file": "kards.tmpl" }
-  { "name": "Empty Template", "file": "starter.tmpl" }
+  { "name": "Kards", "file": "kards.tmpl" },
+  { "name": "Empty Template", "file": "starter.tmpl" },
+  { "name": "Food Blog", "file": "foodblog.tmpl" }
 ]
