@@ -1,3 +1,4 @@
 [
   { "name": "Kards", "file": "kards.tmpl" }
+  { "name": "Empty Template", "file": "empty.tmpl" }
 ]
