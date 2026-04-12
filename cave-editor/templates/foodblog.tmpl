@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Page Title</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap');
+    body{
+         height: 100%;
+        margin: 0;
+        background-color: #F2F2F2;
+    }
+        header {
+            background-image: linear-gradient(to bottom, #FFFFFF, #F2F2F2);
+            border-bottom: 1px solid #F2F2F2;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-family: "Roboto", sans-serif;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.20);
+            font-weight: 100;
+        }
+        header h3 {
+            font-weight: 100;
+            
+        }
+        nav {
+      display: flex;
+      gap: 8px;
+    }
+    
+        nav a {
+            padding: 3px;
+            text-decoration: none;
+            transition: box-shadow 0.5s;
+            border-radius: 2px;
+        }
+        nav a:hover {
+            box-shadow: 0px 0px 4px 0px rgba(0, 0, 0, 0.20);
+        }
+        main {
+            font-family: "Open Sans", sans-serif;
+            padding: 10px;
+            margin-bottom: 16px;
+        }
+        footer {
+              position: fixed;
+              left: 0;
+              bottom: 0;
+              width: 100%;
+              text-align: center;
+              padding: 16px 20px;
+              background-image: linear-gradient(to bottom, #FFFFFF, #F2F2F2);
+              color: #AAAAAA;
+              font-size: 13px;
+            box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.20);
+            font-family: "Roboto", sans-serif;
+        }
+        button {
+            padding: 3px;
+            text-decoration: none;
+            transition: box-shadow 0.5s;
+            border-radius: 2px;
+            background-image: linear-gradient(to bottom, #FFFFFF, #F2F2F2);
+            border-style: none;
+            box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.05);
+        }
+        button:hover {
+            box-shadow: 0px 0px 7px 0px rgba(0, 0, 0, 0.20);
+        }
+        .card {
+            padding: 5px 10px;
+            text-decoration: none;
+            transition: box-shadow 0.5s;
+            border-radius: 2px;
+            background-color: #F2F2F2;
+            border-style: none;
+            box-shadow: 0px 0px 3px 0px rgba(0, 0, 0, 0.20);
+            margin: 10px;
+        }
+        article p {
+             text-align: justify; 
+     font-family: 'Open Sans', sans-serif;
+     font-size: 12px;
+     color: #C8C8C8;
+     line-height: 18px
+        }
+    article {
+      display: flex;
+      gap: 10px;
+      align-items: flex-start;
+    }
+    
+    article img {
+      width: 90px;
+      height: 90px;
+      border-radius: 4px;
+      object-fit: cover;
+    }
+    
+    .card:hover {
+  box-shadow: 0px 0px 7px rgba(0,0,0,0.25);
+  transition: box-shadow 0.3s;
+}
+
+  </style>
+</head>
+
+<body>
+  <header>
+    <h3>Oatmeal's Food Blog</h3>
+    <nav> <!--W3S-->
+      <a href="/">Home</a>
+      <a href="/about">About</a>
+      <a href="/relevantnews">Food Blog</a>
+    </nav>
+  </header>
+  <main>
+    <article class="card">
+      <img
+        src="https://lilluna.com/wp-content/uploads/2018/06/Key-Lime-Cake-3-2.jpg"
+        class="mask" alt="A Slice of Key Lime Cake">
+        <div>
+          <h4>Key Lime Cake</h4>
+          <p>A Delicious Lime Cake!</p>
+        </div>
+    </article>
+        <article class="card">
+      <img
+        src="https://thecleaneatingcouple.com/wp-content/uploads/2021/11/baked-chicken-parmesan-1.jpg"
+        class="mask" alt="Chicken Parmigiano and Marinara Pasta">
+        <div>
+          <h4>Chicken Parmigiano</h4>
+          <p>A Delicious Italian Food you should try!</p>
+        </div>
+    </article>
+        <article class="card">
+      <img
+        src="https://assets.marthastewart.com/styles/wmax-520-highdpi/d17/mh_1036_spaghetti/mh_1036_spaghetti_hd.jpg?itok=xfXN9gM9"
+        class="mask" alt="Marinara Pasta with a bit of grated parmesan on the top">
+        <div>
+          <h4>Pasta</h4>
+          <p>A Delicious Italian Classic!</p>
+        </div>
+    </article>
+  </main>
+  <footer>2026 Oatmeal3DS</footer>
+</body>
+
+</html>
