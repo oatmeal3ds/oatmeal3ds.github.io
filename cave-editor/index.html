@@ -311,7 +311,7 @@
    ACE SETUP
 --------------------------- */
 const editor = ace.edit("editor");
-editor.session.setUseWorker(false);
+editor.session.setUseWorker(true);
 editor.session.setMode("ace/mode/html");
 editor.setOption("copyWithEmptySelection", true);
 editor.setOptions({
