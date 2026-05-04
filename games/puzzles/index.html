@@ -150,7 +150,7 @@ function saveProgress(){localStorage.setItem("topicProgress",JSON.stringify(topi
 function isTopicComplete(topicName){const progress=topicProgress[topicName];return Array.isArray(progress)&&topics[topicName]&&topics[topicName].length>0&&topics[topicName].every((_,index)=>progress[index]===true);}
 function ensureProgress(){for(const topicName in topics){if(topicName==="Custom")continue;const count=topics[topicName].length;const progressArray=Array.isArray(topicProgress[topicName])?topicProgress[topicName]:[];for(let i=0;i<count;i++){if(typeof progressArray[i]!="boolean")progressArray[i]=false;}progressArray.length=count;topicProgress[topicName]=progressArray;}saveProgress();}
 function markLevelComplete(topicName,index){if(topicName==="Custom")return;const progressArray=Array.isArray(topicProgress[topicName])?topicProgress[topicName]:[];progressArray[index]=true;topicProgress[topicName]=progressArray;saveProgress();}
-async function loadTopics(){try{const res=await fetch(topicsUrl);if(!res.ok)throw new Error("Topic fetch failed");const data=await res.json();if(data&&typeof data==="object"&&!Array.isArray(data)){const loaded={Custom:topics.Custom};for(const key in data){if(Array.isArray(data[key])){loaded[key]=data[key].filter(item=>item&&typeof item.name==="string"&&typeof item.img==="string");}}topics=loaded;ensureProgress();showTopics();return;}throw new Error("Invalid topic JSON");}catch(e){console.warn(e);showToast("Unable to load topics");}}
+async function loadTopics(){try{const res=await fetch(topicsUrl);if(!res.ok)throw new Error("Topic fetch failed");const data=await res.json();if(data&&typeof data==="object"&&!Array.isArray(data)){const loaded={Custom:topics.Custom};for(const key in data){if(Array.isArray(data[key])){loaded[key]=data[key].filter(item=>item&&typeof item.name==="string"&&typeof item.img==="string");}}topics=loaded;ensureProgress();showTopics();return;}throw new Error("Invalid topic JSON");}catch(e){console.warn(e);showToast("Unable to load topics");showTopics();}}
 transitionToggle.addEventListener("change",()=>{transitionsEnabled=transitionToggle.checked;if(!transitionsEnabled)mainArea.classList.remove("fadeHidden");});
 function positionHighlight(opt){difficultyHighlight.style.left=opt.offsetLeft+"px";difficultyHighlight.style.width=opt.offsetWidth+"px";}
 difficultyOptions.forEach(opt=>opt.addEventListener("click",()=>{difficultyOptions.forEach(o=>o.classList.remove("active"));opt.classList.add("active");positionHighlight(opt);gridSize=Number(opt.dataset.size);}));
@@ -184,7 +184,6 @@ nextBtn.addEventListener("click",()=>{clearInterval(timerInterval);peekOverlay.s
 homeBtn.onclick=()=>showTopics();
 backBtn.onclick=()=>{if(currentScreen===SCREEN.LEVELS||currentScreen===SCREEN.CUSTOM)showTopics()};
 transitionsEnabled=transitionToggle.checked;
-showTopics();
 })();
 </script>
 </body>
