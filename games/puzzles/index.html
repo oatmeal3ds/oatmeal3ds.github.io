@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Puzzle Ad</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+<style>
+:root{--bg:#fff;--text:#333;--btn-bg:#f1f3f4;--btn-text:#333;--accent:#4285f4;--success:#34a853}
+.dark{--bg:#121212;--text:#e0e0e0;--btn-bg:#1e1e1e;--btn-text:#e0e0e0;--accent:#5c9eff;--success:#4caf50}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;display:flex;flex-direction:column;align-items:center;background:var(--bg);font-family:system-ui,sans-serif;user-select:none;color:var(--text)}
+#topBar{width:100%;max-width:420px;margin:24px auto 16px;display:flex;justify-content:center}
+#topText{font:700 24px/1.2 system-ui,sans-serif;color:var(--text);text-align:center;transition:opacity .3s;cursor:pointer}
+#homeBtn,#backBtn,#settingsBtn{position:absolute;width:36px;height:36px;border:0;border-radius:50%;display:none;align-items:center;justify-content:center;cursor:pointer;z-index:30}
+#homeBtn{left:16px;top:16px;background:#1a73e8;color:#fff}
+#backBtn{left:16px;top:16px;background:#e0e0e0;color:#444}
+#settingsBtn{right:16px;top:16px;background:var(--btn-bg);color:var(--btn-text)}
+#homeBtn i,#backBtn i,#settingsBtn i{font-size:16px}
+#mainArea{width:100%;max-width:420px;display:flex;flex-direction:column;align-items:center;transition:opacity .25s ease,transform .25s ease}
+.fadeHidden{opacity:0;transform:translateY(6px);pointer-events:none}
+#topicSelect,#levelSelect{display:flex;flex-direction:column;gap:12px;margin-bottom:20px;width:100%;align-items:center}
+.menuBtn{padding:12px 20px;font:700 18px/1 system-ui,sans-serif;background:var(--btn-bg);color:var(--btn-text);border:0;border-radius:8px;cursor:pointer;text-align:left;width:260px;position:relative}
+.topicDone::after{content:"\f00c";font-family:"Font Awesome 6 Free";font-weight:900;position:absolute;right:12px;top:50%;transform:translateY(-50%);background:var(--success);color:#fff;font-size:12px;width:18px;height:18px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+#puzzleWrapper{position:relative;width:300px;height:300px;margin-top:8px;display:none}
+#peekOverlay{position:absolute;inset:0;background-size:300px 300px;background-position:center center;opacity:.35;pointer-events:none;display:none;z-index:50}
+#puzzle{position:relative;width:300px;height:300px}
+.piece{position:absolute;touch-action:none;cursor:grab;background-size:300px 300px}
+.piece.animate{transition:left .2s ease,top .2s ease,transform .15s ease,box-shadow .15s ease}
+.piece.dragging{transform:scale(1.12);box-shadow:0 12px 25px rgba(0,0,0,.35);z-index:999}
+#statsBar{display:none;margin-top:12px;font:14px/1 system-ui,sans-serif;color:var(--text);text-align:center}
+#puzzleControls{display:none;margin-top:12px;display:flex;gap:8px;justify-content:center}
+#puzzleControls button{padding:8px 12px;font:600 14px/1 system-ui,sans-serif;border:0;border-radius:6px;cursor:pointer;background:var(--btn-bg);color:var(--btn-text)}
+#nextBtn{margin-top:20px;padding:10px 20px;font:700 18px/1 system-ui,sans-serif;background:var(--accent);color:#fff;border:none;border-radius:8px;cursor:pointer;display:none}
+#customMaker{display:none;flex-direction:column;gap:12px;width:100%;max-width:420px}
+#customHeaderRow{display:flex;justify-content:space-between;align-items:center}
+#addItemBtn{padding:8px 14px;font:600 14px/1 system-ui,sans-serif;background:#1a73e8;color:#fff;border:0;border-radius:6px;cursor:pointer}
+#customList{display:flex;flex-direction:column;gap:10px}
+.customItem{position:relative;padding:12px 12px 10px 40px;background:var(--btn-bg);border:1px solid #c4c4c4;border-radius:8px;box-shadow:0 1px 3px rgba(0,0,0,.12);display:flex;flex-direction:column;gap:6px}
+.dragHandle{position:absolute;left:10px;top:50%;transform:translateY(-50%);cursor:grab;color:#777}
+.dragHandle i{font-size:16px}
+.customRow{display:flex;flex-direction:column;gap:4px}
+.customLabel{font:600 12px/1 system-ui,sans-serif;color:#555}
+.customInput{padding:6px 8px;font:14px/1 system-ui,sans-serif;border:1px solid #ccc;border-radius:4px;background:#fff}
+.customFooterRow{display:flex;justify-content:flex-end;margin-top:4px}
+.removeItemBtn{background:transparent;border:0;cursor:pointer;color:#777;display:flex;align-items:center;justify-content:center}
+.removeItemBtn i{font-size:14px}
+.removeItemBtn:hover{color:#d93025}
+#customActions{display:flex;gap:10px;margin-top:8px}
+#playCustom,#copyJSON,#importJSON{flex:1;padding:10px 12px;font:600 14px/1 system-ui,sans-serif;border:0;border-radius:6px;cursor:pointer}
+#playCustom{background:var(--success);color:#fff}
+#copyJSON,#importJSON{background:var(--btn-bg);color:var(--btn-text)}
+#settingsOverlay{position:fixed;inset:0;background:rgba(0,0,0,.25);display:none;align-items:center;justify-content:center;z-index:40}
+#settingsPanel{width:320px;background:var(--bg);border-radius:12px;box-shadow:0 8px 24px rgba(0,0,0,.25);padding:16px 18px 14px;display:flex;flex-direction:column;gap:14px}
+#settingsTitleRow{display:flex;justify-content:space-between;align-items:center}
+#settingsTitleRow span{font:700 16px/1 system-ui,sans-serif;color:var(--text)}
+#settingsClose{background:transparent;border:0;cursor:pointer;color:#777}
+#settingsClose i{font-size:16px}
+.settingsLabel{font:600 13px/1 system-ui,sans-serif;color:#555;margin-bottom:4px}
+#difficultyControl{position:relative;display:flex;border:1px solid #c4c4c4;border-radius:6px;overflow:hidden;background:#f5f5f5}
+.difficultyOption{flex:1;text-align:center;padding:8px 0;font:600 13px/1 system-ui,sans-serif;color:#555;cursor:pointer;position:relative;z-index:2}
+.difficultyOption.active{color:#fff}
+#difficultyHighlight{position:absolute;top:0;bottom:0;left:0;background:#1a73e8;border-radius:6px;z-index:1;transition:left .2s ease,width .2s ease}
+.settingsToggleRow{display:flex;justify-content:space-between;align-items:center;font:13px/1 system-ui,sans-serif;color:var(--text)}
+.settingsToggleRow label{cursor:pointer}
+.settingsToggleRow input{cursor:pointer}
+#shareBtn{margin-top:8px;padding:10px 12px;font:600 14px/1 system-ui,sans-serif;border:0;border-radius:6px;cursor:pointer;background:var(--btn-bg);color:var(--btn-text);width:100%}
+#loaderOverlay{position:fixed;inset:0;background:var(--bg);display:none;align-items:center;justify-content:center;z-index:50}
+#loaderSpinner{width:40px;height:40px;border-radius:50%;border:4px solid #e0e0e0;border-top-color:#1a73e8;animation:spin .8s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+#toast{position:fixed;bottom:18px;left:50%;transform:translateX(-50%) translateY(16px);min-width:180px;max-width:calc(100% - 40px);padding:10px 14px;border-radius:999px;background:rgba(0,0,0,.85);color:#fff;font:13px/1 system-ui,sans-serif;text-align:center;opacity:0;pointer-events:none;transition:opacity .2s ease,transform .2s ease;z-index:60}
+#toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+</style>
+</head>
+<body>
+<div id="loaderOverlay"><div id="loaderSpinner"></div></div>
+<button id="homeBtn"><i class="fa-solid fa-house"></i></button>
+<button id="backBtn"><i class="fa-solid fa-arrow-left"></i></button>
+<button id="settingsBtn"><i class="fa-solid fa-gear"></i></button>
+<div id="topBar"><div id="topText">Choose a topic</div></div>
+<div id="mainArea">
+<div id="topicSelect"></div>
+<div id="levelSelect" style="display:none"></div>
+<div id="customMaker">
+<div id="customHeaderRow"><div style="font:700 16px/1 system-ui,sans-serif;color:#333">Custom List Maker</div><button id="addItemBtn">Add Item</button></div>
+<div id="customList"></div>
+<div id="customActions"><button id="playCustom">Play This List</button><button id="copyJSON">Copy JSON</button><button id="importJSON">Import JSON</button></div>
+</div>
+<div id="puzzleWrapper"><div id="peekOverlay"></div><div id="puzzle"></div></div>
+<div id="statsBar"></div>
+<div id="puzzleControls"><button id="undoBtn"><i class="fa-solid fa-undo"></i> Undo</button><button id="shuffleBtn"><i class="fa-solid fa-shuffle"></i> Shuffle</button><button id="hintBtn"><i class="fa-solid fa-lightbulb"></i> Hint</button></div>
+<button id="nextBtn">Next Level</button>
+</div>
+<div id="toast"></div>
+<div id="settingsOverlay"><div id="settingsPanel"><div id="settingsTitleRow"><span>Settings</span><button id="settingsClose"><i class="fa-solid fa-xmark"></i></button></div><div><div class="settingsLabel">Difficulty</div><div id="difficultyControl"><div id="difficultyHighlight"></div><div class="difficultyOption active" data-size="3" data-index="0">EASY</div><div class="difficultyOption" data-size="4" data-index="1">MEDIUM</div><div class="difficultyOption" data-size="5" data-index="2">HARD</div></div></div><div class="settingsToggleRow"><label for="transitionToggle">Transitions</label><input type="checkbox" id="transitionToggle" checked></div><div class="settingsToggleRow"><label for="darkModeToggle">Dark Mode</label><input type="checkbox" id="darkModeToggle"></div><button id="shareBtn">Share Progress</button></div></div>
+<script>
+(function(){
+const topText=document.getElementById("topText");
+const topicSelect=document.getElementById("topicSelect");
+const levelSelect=document.getElementById("levelSelect");
+const puzzleWrapper=document.getElementById("puzzleWrapper");
+const puzzle=document.getElementById("puzzle");
+const nextBtn=document.getElementById("nextBtn");
+const homeBtn=document.getElementById("homeBtn");
+const backBtn=document.getElementById("backBtn");
+const settingsBtn=document.getElementById("settingsBtn");
+const customMaker=document.getElementById("customMaker");
+const customList=document.getElementById("customList");
+const addItemBtn=document.getElementById("addItemBtn");
+const playCustom=document.getElementById("playCustom");
+const copyJSON=document.getElementById("copyJSON");
+const importJSON=document.getElementById("importJSON");
+const settingsOverlay=document.getElementById("settingsOverlay");
+const settingsClose=document.getElementById("settingsClose");
+const difficultyHighlight=document.getElementById("difficultyHighlight");
+const difficultyOptions=Array.from(document.querySelectorAll(".difficultyOption"));
+const transitionToggle=document.getElementById("transitionToggle");
+const darkModeToggle=document.getElementById("darkModeToggle");
+const shareBtn=document.getElementById("shareBtn");
+const loaderOverlay=document.getElementById("loaderOverlay");
+const mainArea=document.getElementById("mainArea");
+const toast=document.getElementById("toast");
+const peekOverlay=document.getElementById("peekOverlay");
+const statsBar=document.getElementById("statsBar");
+const undoBtn=document.getElementById("undoBtn");
+const shuffleBtn=document.getElementById("shuffleBtn");
+const hintBtn=document.getElementById("hintBtn");
+let transitionsEnabled=true;
+let toastTimer=null;
+let gridSize=3;
+const baseSize=300;
+let pieces=[];
+let currentTopic=null;
+let currentTopicName=null;
+let currentLevel=0;
+let topicProgress={};
+let timerInterval=null;
+let startTime=null;
+let moveCount=0;
+let hintCount=0;
+let maxHints=3;
+let moveHistory=[];
+const topicsUrl="https://oatmeal3ds.pages.dev/games/puzzles/topics.json";
+const defaultTopics={Apps:[{name:"Google Go",img:"https://play-lh.googleusercontent.com/RZ5luCUwc5QtJP9xDn-ZCwEutT160GVyoh5K1eu4YJ5fD7v4LP5ptVdgR9mz4Hnr7A=w480-h960-rw"},{name:"Slither.io",img:"https://play-lh.googleusercontent.com/tRpviKT0mUi47iAaBne_yhe_xIuFzpW1mCIqoW457tNsKZddZHwiCUR2ga-rU3VXw04=w480-h960-rw"},{name:"Foodpanda",img:"https://play-lh.googleusercontent.com/e5GPTe3zNL4KKPvywZhXFeiDUaowHmlLLCoYjkbw0QGu5LUT39QrL65n2X74IBbCeUEn=w480-h960-rw"}],Custom:[]};
+let topics=Object.assign({},defaultTopics);
+const SCREEN={TOPICS:"topics",LEVELS:"levels",CUSTOM:"custom",PUZZLE:"puzzle"};
+let currentScreen=SCREEN.TOPICS;
+function showToast(message){if(!toast)return;toast.textContent=message;toast.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>toast.classList.remove("show"),2100);}
+function saveProgress(){localStorage.setItem("topicProgress",JSON.stringify(topicProgress));}
+function isTopicComplete(topicName){const progress=topicProgress[topicName];return Array.isArray(progress)&&topics[topicName]&&topics[topicName].length>0&&topics[topicName].every((_,index)=>progress[index]===true);}
+function ensureProgress(){for(const topicName in topics){if(topicName==="Custom")continue;const count=topics[topicName].length;const progressArray=Array.isArray(topicProgress[topicName])?topicProgress[topicName]:[];for(let i=0;i<count;i++){if(typeof progressArray[i]!="boolean")progressArray[i]=false;}progressArray.length=count;topicProgress[topicName]=progressArray;}saveProgress();}
+function markLevelComplete(topicName,index){if(topicName==="Custom")return;const progressArray=Array.isArray(topicProgress[topicName])?topicProgress[topicName]:[];progressArray[index]=true;topicProgress[topicName]=progressArray;saveProgress();}
+async function loadTopics(){try{const res=await fetch(topicsUrl);if(!res.ok)throw new Error("Topic fetch failed");const data=await res.json();if(data&&typeof data==="object"&&!Array.isArray(data)){const loaded={Custom:topics.Custom};for(const key in data){if(Array.isArray(data[key])){loaded[key]=data[key].filter(item=>item&&typeof item.name==="string"&&typeof item.img==="string");}}topics=loaded;ensureProgress();showTopics();return;}throw new Error("Invalid topic JSON");}catch(e){console.warn(e);showToast("Unable to load topics");}}
+transitionToggle.addEventListener("change",()=>{transitionsEnabled=transitionToggle.checked;if(!transitionsEnabled)mainArea.classList.remove("fadeHidden");});
+function positionHighlight(opt){difficultyHighlight.style.left=opt.offsetLeft+"px";difficultyHighlight.style.width=opt.offsetWidth+"px";}
+difficultyOptions.forEach(opt=>opt.addEventListener("click",()=>{difficultyOptions.forEach(o=>o.classList.remove("active"));opt.classList.add("active");positionHighlight(opt);gridSize=Number(opt.dataset.size);}));
+window.addEventListener("load",()=>{const first=difficultyOptions[0];first.classList.add("active");positionHighlight(first);gridSize=Number(first.dataset.size);const savedProgress=localStorage.getItem("topicProgress");if(savedProgress)topicProgress=JSON.parse(savedProgress);ensureProgress();const savedDark=localStorage.getItem("darkMode");if(savedDark==="true"){darkModeToggle.checked=true;document.body.classList.add("dark")}loadTopics();});
+topText.addEventListener("mouseenter",()=>{if(currentScreen===SCREEN.PUZZLE)peekOverlay.style.display="block";});
+topText.addEventListener("mouseleave",()=>{peekOverlay.style.display="none";});
+settingsBtn.addEventListener("click",()=>settingsOverlay.style.display="flex");
+settingsClose.addEventListener("click",()=>settingsOverlay.style.display="none");
+settingsOverlay.addEventListener("click",e=>{if(e.target===settingsOverlay)settingsOverlay.style.display="none"});
+undoBtn.addEventListener("click",()=>{if(moveHistory.length){const last=moveHistory.pop();last.piece.classList.add("animate");last.piece.style.left=(last.from.x*baseSize/gridSize)+"px";last.piece.style.top=(last.from.y*baseSize/gridSize)+"px";last.piece.dataset.x=last.from.x;last.piece.dataset.y=last.from.y;if(last.swappedWith){last.swappedWith.classList.add("animate");last.swappedWith.style.left=(last.swappedFrom.x*baseSize/gridSize)+"px";last.swappedWith.style.top=(last.swappedFrom.y*baseSize/gridSize)+"px";last.swappedWith.dataset.x=last.swappedFrom.x;last.swappedWith.dataset.y=last.swappedFrom.y}moveCount--;updateStats()}});
+shuffleBtn.addEventListener("click",()=>{clearInterval(timerInterval);startTime=Date.now();timerInterval=setInterval(updateStats,1000);moveHistory=[];moveCount=0;hintCount=0;buildPieces(currentTopic[currentLevel].img);updateStats()});
+hintBtn.addEventListener("click",()=>{if(hintCount<maxHints){const wrong=pieces.find(p=>p.dataset.x!=p.dataset.correctX||p.dataset.y!=p.dataset.correctY);if(wrong){wrong.style.border="3px solid #ff0000";setTimeout(()=>wrong.style.border="",1000);hintCount++;updateStats()}}});
+darkModeToggle.addEventListener("change",()=>{document.body.classList.toggle("dark",darkModeToggle.checked);localStorage.setItem("darkMode",darkModeToggle.checked)});
+shareBtn.addEventListener("click",()=>{const text=`I just solved "${currentTopic[currentLevel].name}" in ${Math.floor((Date.now()-startTime)/1000)}s with ${moveCount} moves!`;if(navigator.share){navigator.share({title:"Puzzle Progress",text:text})}else{navigator.clipboard.writeText(text).then(()=>showToast("Copied to clipboard!"))}});
+function applyTransition(fn){if(!transitionsEnabled){fn();return}mainArea.classList.add("fadeHidden");setTimeout(()=>{fn();mainArea.classList.remove("fadeHidden")},180)}
+function showTopics(){currentScreen=SCREEN.TOPICS;applyTransition(()=>{topicSelect.innerHTML="";topicSelect.style.display="flex";levelSelect.style.display="none";puzzleWrapper.style.display="none";customMaker.style.display="none";nextBtn.style.display="none";statsBar.style.display="none";puzzleControls.style.display="none";peekOverlay.style.display="none";homeBtn.style.display="none";backBtn.style.display="none";settingsBtn.style.display="flex";topText.textContent="Choose a topic";for(const t in topics){const btn=document.createElement("button");btn.className="menuBtn";btn.textContent=t;if(t!="Custom"&&isTopicComplete(t))btn.classList.add("topicDone");btn.onclick=()=>t==="Custom"?showCustomMaker():showLevels(t);topicSelect.appendChild(btn)}});saveProgress();}
+function showLevels(topicName){currentScreen=SCREEN.LEVELS;currentTopicName=topicName;currentTopic=topics[topicName];applyTransition(()=>{topicSelect.style.display="none";levelSelect.style.display="flex";levelSelect.innerHTML="";puzzleWrapper.style.display="none";customMaker.style.display="none";nextBtn.style.display="none";statsBar.style.display="none";puzzleControls.style.display="none";peekOverlay.style.display="none";topText.textContent=topicName;backBtn.style.display="flex";homeBtn.style.display="none";settingsBtn.style.display="flex";currentTopic.forEach((lvl,i)=>{const btn=document.createElement("button");btn.className="menuBtn";btn.textContent=lvl.name;if(Array.isArray(topicProgress[topicName])&&topicProgress[topicName][i])btn.classList.add("topicDone");btn.onclick=()=>startLevel(i);levelSelect.appendChild(btn)})})}
+function showCustomMaker(){currentScreen=SCREEN.CUSTOM;currentTopicName="Custom";currentTopic=topics.Custom;applyTransition(()=>{topicSelect.style.display="none";levelSelect.style.display="none";puzzleWrapper.style.display="none";nextBtn.style.display="none";statsBar.style.display="none";puzzleControls.style.display="none";peekOverlay.style.display="none";customMaker.style.display="flex";topText.textContent="Custom List Maker";backBtn.style.display="flex";homeBtn.style.display="none";settingsBtn.style.display="flex";renderCustomList()})}
+function renderCustomList(){customList.innerHTML="";const fragment=document.createDocumentFragment();topics.Custom.forEach((item,index)=>{const card=document.createElement("div");card.className="customItem";card.dataset.index=index;const handle=document.createElement("div");handle.className="dragHandle";handle.innerHTML='<i class="fa-solid fa-grip-vertical"></i>';card.appendChild(handle);const titleRow=document.createElement("div");titleRow.className="customRow";const titleLabel=document.createElement("div");titleLabel.className="customLabel";titleLabel.textContent="TITLE";const titleInput=document.createElement("input");titleInput.className="customInput";titleInput.value=item.name||"";titleInput.oninput=()=>item.name=titleInput.value;titleRow.appendChild(titleLabel);titleRow.appendChild(titleInput);const urlRow=document.createElement("div");urlRow.className="customRow";const urlLabel=document.createElement("div");urlLabel.className="customLabel";urlLabel.textContent="IMAGE URL";const urlInput=document.createElement("input");urlInput.className="customInput";urlInput.value=item.img||"";urlInput.oninput=()=>item.img=urlInput.value;urlRow.appendChild(urlLabel);urlRow.appendChild(urlInput);const footerRow=document.createElement("div");footerRow.className="customFooterRow";const removeBtn=document.createElement("button");removeBtn.className="removeItemBtn";removeBtn.innerHTML='<i class="fa-solid fa-trash"></i>';removeBtn.onclick=()=>{topics.Custom.splice(index,1);renderCustomList()};footerRow.appendChild(removeBtn);card.appendChild(titleRow);card.appendChild(urlRow);card.appendChild(footerRow);let dragStartY=0;let dragging=false;let placeholder=null;let moveQueued=false;let lastMoveY=0;handle.addEventListener("pointerdown",e=>{dragging=true;dragStartY=e.clientY;card.style.opacity="0.6";card.style.transform="scale(0.98)";card.style.zIndex="10";handle.setPointerCapture(e.pointerId);placeholder=document.createElement("div");placeholder.style.height=card.offsetHeight+"px";customList.insertBefore(placeholder,card.nextSibling)});handle.addEventListener("pointermove",e=>{if(!dragging)return;lastMoveY=e.clientY;if(moveQueued)return;moveQueued=true;requestAnimationFrame(()=>{moveQueued=false;const dy=lastMoveY-dragStartY;card.style.transform=`translateY(${dy}px) scale(0.98)`;const cards=Array.from(customList.querySelectorAll(".customItem")).filter(c=>c!==card);const pRect=placeholder.getBoundingClientRect();const pMid=pRect.top+pRect.height/2;for(const other of cards){const r=other.getBoundingClientRect();const oMid=r.top+r.height/2;if(dy>0&&oMid>pMid&&other.nextSibling!==placeholder){customList.insertBefore(placeholder,other.nextSibling);break}else if(dy<0&&oMid<pMid&&other!==placeholder.previousSibling){customList.insertBefore(placeholder,other);break}}})});handle.addEventListener("pointerup",()=>{if(!dragging)return;dragging=false;handle.releasePointerCapture();card.style.opacity="1";card.style.transform="none";card.style.zIndex="1";if(placeholder){customList.insertBefore(card,placeholder);placeholder.remove();placeholder=null;const newOrder=[];const cards=customList.querySelectorAll(".customItem");cards.forEach(c=>newOrder.push(topics.Custom[Number(c.dataset.index)]));topics.Custom=newOrder;renderCustomList()}});fragment.appendChild(card)});customList.appendChild(fragment)}
+addItemBtn.onclick=()=>{topics.Custom.push({name:"",img:""});renderCustomList()};
+playCustom.onclick=()=>{if(!topics.Custom.length)return;currentTopicName="Custom";currentTopic=topics.Custom;currentLevel=0;startLevel(0)};
+copyJSON.onclick=()=>{const json=JSON.stringify(topics.Custom,null,2);navigator.clipboard.writeText(json).then(()=>showToast("Copied JSON!")).catch(()=>showToast("Copy failed"))};
+importJSON.onclick=()=>{const json=prompt("Paste JSON to import:");if(json){try{const data=JSON.parse(json);if(Array.isArray(data)){topics.Custom=data;renderCustomList();showToast("Imported successfully!")}else{showToast("Invalid JSON format")}}catch(e){showToast("Invalid JSON")}}};
+function startLevel(index){currentScreen=SCREEN.PUZZLE;currentLevel=index;applyTransition(()=>{topicSelect.style.display="none";levelSelect.style.display="none";customMaker.style.display="none";puzzleWrapper.style.display="block";nextBtn.style.display="none";statsBar.style.display="block";puzzleControls.style.display="flex";peekOverlay.style.display="none";homeBtn.style.display="flex";backBtn.style.display="none";settingsBtn.style.display="flex";loadLevel(index)})}
+function loadLevel(index){puzzle.innerHTML="";pieces=[];moveHistory=[];moveCount=0;hintCount=0;peekOverlay.style.backgroundImage="";peekOverlay.style.display="none";const imgUrl=currentTopic[index].img;peekOverlay.style.backgroundImage=`url(${imgUrl})`;startTime=Date.now();timerInterval=setInterval(updateStats,1000);updateStats();loaderOverlay.style.display="flex";const imgObj=new Image();imgObj.onload=()=>{buildPieces(imgUrl);loaderOverlay.style.display="none";topText.textContent="Drag the pieces to complete the puzzle"};imgObj.onerror=()=>{loaderOverlay.style.display="none";topText.textContent="Failed to load image"};imgObj.src=imgUrl}
+function buildPieces(img){const tileSize=baseSize/gridSize;const cells=[];for(let y=0;y<gridSize;y++)for(let x=0;x<gridSize;x++)cells.push({x,y});for(let i=cells.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[cells[i],cells[j]]=[cells[j],cells[i]]}for(let i=0;i<gridSize*gridSize;i++){const piece=document.createElement("div");piece.className="piece";const correctX=i%gridSize;const correctY=Math.floor(i/gridSize);piece.style.width=tileSize+"px";piece.style.height=tileSize+"px";piece.style.backgroundImage=`url(${img})`;piece.style.backgroundSize=`${baseSize}px ${baseSize}px`;piece.style.backgroundPosition=`-${correctX*tileSize}px -${correctY*tileSize}px`;const cell=cells[i];piece.style.left=(cell.x*tileSize)+"px";piece.style.top=(cell.y*tileSize)+"px";piece.dataset.correctX=correctX;piece.dataset.correctY=correctY;piece.dataset.x=cell.x;piece.dataset.y=cell.y;puzzle.appendChild(piece);pieces.push(piece)}enableDragging(tileSize)}
+function updateStats(){const elapsed=Math.floor((Date.now()-startTime)/1000);const mins=Math.floor(elapsed/60);const secs=elapsed%60;statsBar.textContent=`Time: ${mins}:${secs.toString().padStart(2,'0')} | Moves: ${moveCount} | Hints: ${hintCount}/${maxHints}`;}
+function enableDragging(tileSize){let active=null;let offsetX=0;let offsetY=0;pieces.forEach(piece=>{piece.addEventListener("pointerdown",e=>{active=piece;offsetX=e.clientX-piece.offsetLeft;offsetY=e.clientY-piece.offsetTop;piece.classList.remove("animate");piece.classList.add("dragging");piece.setPointerCapture(e.pointerId)});let movePending=false;let lastMoveEvent=null;piece.addEventListener("pointermove",e=>{if(!active)return;lastMoveEvent=e;if(movePending)return;movePending=true;requestAnimationFrame(()=>{movePending=false;if(!active||!lastMoveEvent)return;active.style.left=(lastMoveEvent.clientX-offsetX)+"px";active.style.top=(lastMoveEvent.clientY-offsetY)+"px"})});piece.addEventListener("pointerup",()=>{if(!active)return;const oldX=Number(active.dataset.x);const oldY=Number(active.dataset.y);let x=Math.round(active.offsetLeft/tileSize);let y=Math.round(active.offsetTop/tileSize);x=Math.max(0,Math.min(gridSize-1,x));y=Math.max(0,Math.min(gridSize-1,y));let other=pieces.find(p=>p!==active&&Number(p.dataset.x)===x&&Number(p.dataset.y)===y);if(other){const oldOtherX=Number(other.dataset.x);const oldOtherY=Number(other.dataset.y);other.classList.add("animate");other.style.left=(oldX*tileSize)+"px";other.style.top=(oldY*tileSize)+"px";other.dataset.x=oldX;other.dataset.y=oldY;moveHistory.push({piece:active,from:{x:oldX,y:oldY},to:{x:x,y:y},swappedWith:other,swappedFrom:{x:oldOtherX,y:oldOtherY},swappedTo:{x:oldOtherX,y:oldOtherY}})}else{moveHistory.push({piece:active,from:{x:oldX,y:oldY},to:{x:x,y:y}})}active.classList.remove("dragging");active.classList.add("animate");active.style.left=(x*tileSize)+"px";active.style.top=(y*tileSize)+"px";active.dataset.x=x;active.dataset.y=y;moveCount++;updateStats();active=null;checkWin()})})}
+function checkWin(){for(const p of pieces){if(p.dataset.x!=p.dataset.correctX||p.dataset.y!=p.dataset.correctY)return}if(currentTopicName!=="Custom")markLevelComplete(currentTopicName,currentLevel);clearInterval(timerInterval);confetti({particleCount:100,spread:70,origin:{y:0.6}});topText.style.opacity=0;setTimeout(()=>{topText.textContent=`You did it! (${currentTopic[currentLevel].name})`;topText.style.opacity=1},150);nextBtn.style.display="block"}
+nextBtn.addEventListener("click",()=>{clearInterval(timerInterval);peekOverlay.style.display="none";currentLevel++;if(currentLevel>=currentTopic.length){showTopics();return}loadLevel(currentLevel)});
+homeBtn.onclick=()=>showTopics();
+backBtn.onclick=()=>{if(currentScreen===SCREEN.LEVELS||currentScreen===SCREEN.CUSTOM)showTopics()};
+transitionsEnabled=transitionToggle.checked;
+showTopics();
+})();
+</script>
+</body>
+</html>
