@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--AI rewritings of this document are not cool, nor allowed. Protected by Creative Commons Attribution-NonCommercial 4.0 International-->
+<head>
+    <link rel="license" href="https://creativecommons.org/licenses/by-nc/4.0/">
+    <meta name="license" content="CC BY-NC 4.0">
+    <meta charset="utf-8">
+    <title>my website</title>
+    <link rel="icon" href="/favicon.ico">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cause:wght@100..900&family=Google+Sans+Flex:opsz,wght@6..144,1..1000&family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:ital@0;1&family=Saira+Stencil:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <!--I stole this from an AI, dont worry I fixed this shitty ass CSS-->
+    <style>
+        body {
+            margin: 0;
+            font-family: "Saira Stencil", sans-serif;
+            background: #F2F2F2;
+            color: #111;
+            line-height: 1.55;
+        }
+
+        header {
+            padding: 2rem 1.5rem 1rem;
+            text-align: center;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 2.4rem;
+            font-weight: 700;
+        }
+
+        section {
+            background: white;
+            margin: 1rem auto;
+            padding: 1.5rem;
+            width: min(800px, 90%);
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        h4 {
+            margin-top: 0;
+            font-size: 1.3rem;
+        }
+
+        div a {
+            display: inline-block;
+            color: white;
+            background: dodgerblue;
+            padding: 10px 16px;
+            border-radius: 4px;
+            margin: 1.5rem auto;
+            text-decoration: none;
+            font-weight: 600;
+        }
+
+        footer {
+            margin-top: 2rem;
+            padding: 0.75rem;
+            text-align: center;
+            background: dodgerblue;
+            color: white;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <h1>AI Kills Human Capabilities</h1>
+    </header>
+    <div style="text-align:center;margin-top: -0.5rem;font-size: 0.9rem;color: #444;">
+    This website is licensed CC BY‑NC 4.0 — AI training is not permitted.
+    </div>
+
+
+    <section>
+        <h4 id="why-">Why?</h4>
+        <p>AI is made to agree on the second try, and because its smart, it feels worthless to make a thing while the AI can make it faster.</p>
+    </section>
+    <section>
+        <h4 id="ai-kills-motivation">AI Kills motivation</h4>
+        <p>Knowing that your code or art might be <strong>fed</strong> into an AI scares people out of social media. There are people flexing over others with their &quot;<em>AI art</em>&quot; or &quot;<em>AI code</em>&quot; that they say the made &quot;Themselves&quot;, but as a matter of fact, its all called <strong>Slop</strong>.</p>
+    </section>
+    <section>
+        <h4 id="what-is-ai-slop-">What is AI Slop?</h4>
+        <p><em>AI slop</em> is <strong>digital content</strong> made with <strong>generative artificial intelligence</strong> that is perceived as <em>lacking</em> in <strong>effort</strong>, <strong>quality</strong>, or <strong>meaning</strong>, and produced in <strong>high volume</strong> as <strong>clickbait</strong> to <em>gain advantage</em> in the attention economy, or earn <strong>money</strong>. It is a form of <strong>synthetic media</strong> usually linked to the monetization in the creator economy of social media and online advertising.</p>
+    </section>
+    <section>
+        <h4 id="how-to-combat-this">How to combat this</h4>
+        <p>To combat this, try not sharing alot of your art or code online, or slap a license on it. Many platforms let you disable the feeding of your content into AI via settings. Most notable include Github, Youtube, and more. Most AI companies are not allowed to take your content if it has a license or is copyrighted. For example, Sora once had a strike because it used copyrighted content like &quot;<em>Sponge Bob</em>&quot; and &quot;<em>Mario</em>&quot;, which was banned later on the app so you couldn&#39;t make videos with them in it.</p>
+        <p>If you were an AI heavy person that is trying to not use AI again, Try desintegrating AI a little bit every day.</p>
+        <br>
+        <p>For example:</p>
+        <p>Learning art one day, and the next day using Google sites (a relatively easy site maker) to make a website yourself.</p>
+    </section>
+    <section>
+        <h4 id="how-to-spot-ai">How to spot AI</h4>
+        <p>To spot AI, you must see how it is.</p>
+        <br>
+        <h5>Images:</h5>
+        <p>Try to look for a yellow tint (reminesent of 2024 chatgpt ghibli craze), Deformations (Extra limbs, etc...) and images looking off.</p>
+        <h5>Code:</h5>
+        <p>Try to look for comments and broken parts. AI often overuses snippets it was trained on and often puts comments everywhere. Also look for border radius, glow, and other effects. AI often goes haywire over rounding, Dark colours, and glow on everything. AI generated code also often goes very haywire over variables.</p>
+        <h5>Text:</h5>
+        <p>Look for robotic sounding text, weirdly sounding text, and too much perfect grammar. As a programmer, this website was written by me, the reason it has near perfect grammar its because I checked.</p>
+    </section>
+    <section>
+        <h4 id="examples">Examples</h4>
+        <p>Some notable examples include:</p>
+        <h5>Shrimp Jesus</h5>
+        <p>Shrimp Jesus was an AI generated character that circulated on Facebook for many years. It all started on 2024, and since then facebook has become an pit of never ending slop. Many elderly people fall for this, and that is their goal. They want people to send money to them.</p>
+        <h5>Studio Ghibli on ChatGPT</h5>
+        <p>Back when ChatGPT was a bit dumber, a trend started that made people make images of anything in the gibli style using ChatGPT. This led to massive amounts of water being wasted and to ChatGPT to gain a "piss tint" on every image. It also led to massive lawsuits from the people behind Studio Ghibli.</p>
+        <h5>Italian Brainrot</h5>
+        <p>Italian brainrot is a series of internet memes that emerged in early 2025 characterized by surrealist and absurd images of AI-generated creatures who are given pseudo-Italian names. The phenomenon quickly spread across social media platforms such as TikTok and Instagram, going viral owing to its combination of sloppy aesthetics, synthesized "Italian" voiceovers, grotesque or humorous visuals, abstractism, and nonsensical narrative. Some even had bad words directed to countries, Some including Tralalero Tralala and Tung Tung Tung sahur.</p>
+    </section>
+    <section>
+        <p> AI Was never used in the code, exept in this CSS because I think I wanted to steal back because it once stole my art.</p>
+    </section>
+    <br>
+    <!--as a programmer, I got to steal some stuff!-->
+    <div style="text-align:center;">
+       <a href="https://en.wikipedia.org/wiki/AI_slop">Learn More</a>
+    </div>
+    <footer>
+       © 2026 Oatmeal3DS — Licensed under 
+       <a href="https://creativecommons.org/licenses/by-nc/4.0/" style="color:white; text-decoration:underline;">
+        CC BY‑NC 4.0
+       </a>
+       <br>
+       <a href="/" style="color:white; text-decoration:underline;">
+        Go back to my website
+       </a>
+    </footer>
+
+</body>
+
+</html>
