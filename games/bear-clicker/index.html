@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bear Clicker</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Google+Sans+Flex:opsz,wght@6..144,1..1000');
+
+        body {
+            font-family: "Google Sans Flex", sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+        }
+
+        .cookie {
+            animation: bounceAnimation 2s ease-in-out infinite;
+            border-radius: 200px;
+            box-shadow: 5px 5px 15px 0px rgba(0, 0, 0, 0.20);
+            margin: 10px;
+            width: 20rem;
+            height: 20rem;
+            cursor: pointer;
+            user-select: none;
+            /*CSS mania???*/
+        }
+
+        @keyframes bounceAnimation {
+
+            0%,
+            100% {
+                transform: translateY(10px);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        .plus-one {
+            position: absolute;
+            font-size: 2rem;
+            font-weight: bold;
+            color: dodgerblue;
+            pointer-events: none;
+            animation: floatUp 0.8s ease-out forwards;
+        }
+
+        @keyframes floatUp {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateY(-150px);
+            }
+        }
+
+        .backlink {
+            display: inline-block;
+            padding: 0.6rem 1.2rem;
+            border: 2px solid #ffb347;
+            border-radius: 9999px;
+            /* the sacred orb */
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            background: #fff8e6;
+            margin-bottom: 1.5rem;
+            transition: background 0.2s ease, transform 0.15s ease, box-shadow 0.15s ease;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+        }
+
+        .backlink:hover {
+            background: #ffe0a8;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.12);
+        }
+    </style>
+</head>
+
+<body>
+    <a href="/" class="backlink">← escape the bear</a>
+
+    <p>Bear Clicker</p>
+    <img src="https://placebear.com/400/400" class="cookie" draggable="false">
+    <p id="counter">Click the bear to start</p>
+    <script>
+        // WARNING: This code was written by a dumbass learning JS.
+        // It works. I don’t know why. Do not touch anything.
+
+        // why is it that when I delete this variable crap the code falls apart and my bear burns????
+        // this variable holds the number of times you've clicked the bear?
+        // delete it and everything dies (learned the hard way)
+        let count = 0;
+        const button = document.querySelector('.cookie');
+        const paragraph = document.querySelector('#counter');
+
+        button.addEventListener('click', function(event) {
+            count = count + 1;
+            paragraph.textContent = 'Count: ' + count;
+
+            const plus = document.createElement('span');
+            plus.textContent = '+1';
+            plus.classList.add('plus-one');
+
+            // starting position (maybe)
+            let x = event.pageX;
+            let y = event.pageY;
+
+            // random curve direction?
+            const curveStrength = (Math.random() * 0.6) + 0.2; // 0.2–0.8
+            const curveDirection = Math.random() < 0.5 ? -1 : 1; // left or right
+
+            // apply initial position (we had this at start, why again)
+            plus.style.left = x + 'px';
+            plus.style.top = y + 'px';
+
+            document.body.appendChild(plus);
+
+            // forbidden stack overflow code I stole
+            let frame = 0;
+
+            function animate() {
+                frame++;
+
+                const curve = Math.sin(frame / 10) * 20 * curveStrength * curveDirection;
+
+                plus.style.left = (x + curve) + 'px';
+
+                if (frame < 60) {
+                    requestAnimationFrame(animate);
+                }
+            }
+
+            animate();
+
+            setTimeout(() => plus.remove(), 800);
+        });
+    </script>
+    <!--I seriously need a JS teach LOL-->
+
+
+</body>
+
+</html>
