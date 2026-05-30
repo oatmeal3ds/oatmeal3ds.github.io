@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Games</title>
+
+    <script src="https://www.google.com/recaptcha/api.js?render=6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU"></script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&family=Roboto:wght@100&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="/assets/elevatedmountains.css">
+
+    <style>
+        .game-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+            gap: 16px;
+            margin: 15px 20px;
+        }
+
+        .game-card {
+            background: #1c1c1c;
+            border: 1px solid #333;
+            border-top: 3px solid #2e4d22;
+            overflow: hidden;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.2s, border-top-color 0.2s;
+        }
+
+        .game-card:hover {
+            transform: translateY(-4px);
+            border-top-color: #fdd835;
+        }
+
+        .game-thumb {
+            width: 100%;
+            height: 140px;
+            object-fit: cover;
+            background: #222;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #444;
+            font-size: 2rem;
+        }
+
+        .game-info {
+            padding: 12px;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .game-title {
+            font-weight: bold;
+            font-size: 1rem;
+            color: #eee;
+        }
+
+        .game-desc {
+            font-size: 0.82rem;
+            color: #bbb;
+            flex-grow: 1;
+        }
+
+        .game-footer {
+            padding: 10px 12px;
+            border-top: 1px solid #333;
+        }
+
+        .game-footer a {
+            display: block;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .game-footer button {
+            width: 100%;
+        }
+
+        .section-label {
+            font-size: 0.75rem;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            color: #555;
+            margin: 20px 20px 0;
+            padding-bottom: 6px;
+            border-bottom: 1px solid #222;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id="menu-overlay"></div>
+    <div id="site-header"></div>
+
+    <div class="hero">
+        <div class="hero-bg" id="hero-bg"></div>
+        <div style="z-index: 1;">
+            <h1 class="hero-title">Games</h1>
+            <p class="hero-sub">HTML games hosted on this website</p>
+        </div>
+    </div>
+
+    <p class="section-label"><i class="fa-solid fa-gamepad" style="margin-right:6px;"></i>Games</p>
+    <div class="game-grid">
+
+        <div class="game-card">
+            <img class="game-thumb" src="https://placebear.com/400/300" alt="Bear Clicker">
+            <div class="game-info">
+                <div class="game-title">Bear Clicker</div>
+                <div class="game-desc">Click the bear. Fear the bear.</div>
+            </div>
+            <div class="game-footer">
+                <a href="/games/bear-clicker"><button>Play</button></a>
+            </div>
+        </div>
+        <div class="game-card">
+            <img class="game-thumb" src="https://placehold.co/400x300?text=Puzzles" alt="Puzzles Game">
+            <div class="game-info">
+                <div class="game-title">Puzzles</div>
+                <div class="game-desc">A puzzle game by Oatmeal.</div>
+            </div>
+            <div class="game-footer">
+                <a href="/games/puzzles"><button>Play</button></a>
+            </div>
+        </div>
+
+
+    </div>
+
+    <footer id="site-footer"></footer>
+
+    <script>
+        function loadOatLayout() {
+            const script = document.createElement('script');
+            script.src = `/assets/layout.js?t=${Date.now()}`;
+            document.body.appendChild(script);
+        }
+        loadOatLayout();
+
+        grecaptcha.ready(function() {
+            grecaptcha.execute('6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU', {
+                action: 'homepage'
+            });
+        });
+    </script>
+</body>
+
+</html>
