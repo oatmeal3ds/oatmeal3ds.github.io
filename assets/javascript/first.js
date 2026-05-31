@@ -1,3 +1,4 @@
+// My first JavaScript milestone: the cuttlefish riddle
 let riddle = "I change colors and I hover like a UFO. I also have a skirt that lets me swim and various tentacles on my face. What am I?"
 let answer = "cuttlefish"
 
