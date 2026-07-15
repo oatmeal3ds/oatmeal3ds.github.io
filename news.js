@@ -1,6 +1,20 @@
 // This is a "wrapper" function that sends the data to your page
 oatSS_Callback([
   {
+    "id": "awesomeness1",
+    "t": "Holy moly News works for once!",
+    "dt": "2026-07-15",
+    "d": "The news finally renders the new lines and bullets",
+    "u": "https://oatmeal3ds.pages.dev/news",
+    "c": [
+      "site",
+      "feature",
+      "fix",
+      "surprised"
+    ],
+    "f": "# It Works!\\n* Bullets now work!\\nAnd new lines do!"
+  },
+  {
     "id": "zeroclaw1",
     "t": "I now have my own Zeroclaw Bot!",
     "dt": "2026-07-15",
