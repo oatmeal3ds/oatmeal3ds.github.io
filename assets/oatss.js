@@ -208,6 +208,7 @@ function renderComplex(container, data, paginate, showSearch, showFilter) {
         <option value="all">All</option>
         <option value="t">Title</option>
         <option value="d">Description</option>
+        <option value="tags">Tags</option>
       </select>`;
     container.appendChild(bar);
 
@@ -220,10 +221,14 @@ function renderComplex(container, data, paginate, showSearch, showFilter) {
       container.querySelectorAll('.news-item').forEach(item => {
         const t = item.querySelector('.news-link')?.textContent.toLowerCase() || '';
         const d = item.querySelector('.news-desc')?.textContent.toLowerCase() || '';
+        const tags = item.querySelector('.news-tags')?.textContent.toLowerCase() || '';
+        
         let match = false;
-        if (field === 'all') match = t.includes(query) || d.includes(query);
+        if (field === 'all') match = t.includes(query) || d.includes(query) || tags.includes(query);
         if (field === 't') match = t.includes(query);
         if (field === 'd') match = d.includes(query);
+        if (field === 'tags') match = tags.includes(query);
+        
         item.style.display = (!query || match) ? '' : 'none';
       });
     }
@@ -305,14 +310,14 @@ function buildItem(item, allowExpand) {
   div.className = 'news-item';
   const cats = Array.isArray(item.c) ? item.c : (item.c ? [item.c] : []);
   const url = item.u || item.url || '';
-  div.innerHTML = `
+div.innerHTML = `
     <span class="news-date">${item.dt || item.date || ''}</span>
     <a href="${url}" target="_blank" class="news-link">
       ${item.t || item.title || 'Untitled'}
       ${url ? '<i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7rem;margin-left:5px;"></i>' : ''}
     </a>
     <p class="news-desc">${item.d || item.desc || ''}</p>
-    ${cats.length ? `<p style="font-size:0.75rem;color:#555;margin:4px 0 0;">${cats.join(' · ')}</p>` : ''}
+    ${cats.length ? `<p class="news-tags" style="font-size:0.75rem;color:#555;margin:4px 0 0;">${cats.join(' · ')}</p>` : ''}
     ${(allowExpand && item.f) ? `<button class="oatss-expand" style="margin-top:6px;font-size:11px;padding:2px 10px;">Read More</button>` : ''}`;
 
   if (allowExpand && item.f) {
