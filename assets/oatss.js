@@ -4,8 +4,13 @@
 //   Simple:  <div data-oatss="all" data-mode="simple" data-limit="3" data-age="week"></div>
 //   Complex: <div data-oatss="all" data-mode="complex" data-paginate="5" data-search="true" data-filter="true"></div>
 
-// --- MARKDOWN PARSER ---
+// --- MARKDOWN PARSER (FIXED) ---
 function oatMD(text) {
+  if (!text) return "";
+  
+  // Convert literal string "\n" or "\\n" sequences into real line breaks first!
+  text = text.replace(/\\n/g, "\n");
+
   if (!text) return "";
   text = text.replace(/```(\w*)\n?([\s\S]*?)```/g, (m, lang, code) => {
     const safe = code
