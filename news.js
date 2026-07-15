@@ -12,7 +12,7 @@ oatSS_Callback([
       "announcement",
       "AI"
     ],
-    "f": "# Welcome Captain Crab to the Cave!\\n* Big updates on the hardware side!\\n\\nI'm officially kicking off ZeroClaw integration. Here's what's happening:\\n* Systemd services are fully online and auto-starting on the DietPi.\\n* Keeping things lightweight, fast, and completely customizable!"
+    "f": "# Welcome Captain Crab to the Cave!\n* Big updates on the hardware side!\n\nI'm officially kicking off ZeroClaw integration. Here's what's happening:\n* Systemd services are fully online and auto-starting on the DietPi.\n* Keeping things lightweight, fast, and completely customizable!"
   },
   {
     "id": "",
