@@ -8,37 +8,68 @@
 function oatMD(text) {
   if (!text) return "";
   
-  // Clean up any literal "\n" strings first
-  text = text.replace(/\\n/g, "\n");
+  // 1. Normalize all newlines (handles both literal "\\n" and real "\n")
+  text = text.replace(/\\n/g, "\n").replace(/\r\n/g, "\n");
 
-  // Code block parser... (left as is)
+  // 2. Parse Code Blocks
   text = text.replace(/```(\w*)\n?([\s\S]*?)```/g, (m, lang, code) => {
-    const safe = code
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;");
+    const safe = code.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
     return `<pre><code>${safe}</code></pre>`;
   });
 
-  return text
-    .replace(/^### (.*)$/gim, "<h3>$1</h3>")
-    .replace(/^## (.*)$/gim, "<h2>$1</h2>")
-    .replace(/^# (.*)$/gim, "<h1>$1</h1>")
+  // 3. Split into lines to parse lists and headers reliably
+  const lines = text.split("\n");
+  let inList = false;
+  const processedLines = [];
+
+  for (let line of lines) {
+    const trimmed = line.trim();
+    
+    // Check for bullet points (* or -)
+    if (trimmed.startsWith("* ") || trimmed.startsWith("- ")) {
+      if (!inList) {
+        processedLines.push('<ul style="padding-left: 20px; margin: 8px 0;">');
+        inList = true;
+      }
+      const itemContent = trimmed.substring(2);
+      processedLines.push(`<li>${itemContent}</li>`);
+      continue;
+    } else {
+      if (inList) {
+        processedLines.push("</ul>");
+        inList = false;
+      }
+    }
+
+    // Parse Headers
+    if (trimmed.startsWith("### ")) {
+      processedLines.push(`<h3>${trimmed.substring(4)}</h3>`);
+    } else if (trimmed.startsWith("## ")) {
+      processedLines.push(`<h2>${trimmed.substring(3)}</h2>`);
+    } else if (trimmed.startsWith("# ")) {
+      processedLines.push(`<h1>${trimmed.substring(2)}</h1>`);
+    } else if (trimmed.startsWith("> ")) {
+      processedLines.push(`<blockquote>${trimmed.substring(2)}</blockquote>`);
+    } else {
+      processedLines.push(line);
+    }
+  }
+
+  if (inList) {
+    processedLines.push("</ul>");
+  }
+
+  // Reconstruct the text
+  let html = processedLines.join("\n");
+
+  // 4. Inline styles (Bold, Italic, Links)
+  html = html
     .replace(/\*\*(.+?)\*\*/gim, "<b>$1</b>")
     .replace(/(^|[^*])\*(?!\*)([^*]+)\*(?!\*)/gim, "$1<i>$2</i>")
     .replace(/\[([^\]]+)\]\(([^)]+)\)/gim, "<a href='$2'>$1</a>")
-    .replace(/^> (.*)$/gim, "<blockquote>$1</blockquote>")
-    
-    // --- UPDATED BULLET REGEX (Matches both * and -) ---
-    .replace(/(?:^[*-] .+\n?)+/gim, match => {
-      const items = match.trim().split("\n")
-        .map(line => line.replace(/^[*-] /, "")) // Strip either '*' or '-'
-        .map(item => `<li>${item}</li>`)
-        .join("");
-      return `<ul style="padding-left: 20px; margin: 8px 0;">${items}</ul>`;
-    })
-    
     .replace(/\n{2,}/g, "<br><br>");
+
+  return html;
 }
 
 // --- DATE AGE FILTER ---
