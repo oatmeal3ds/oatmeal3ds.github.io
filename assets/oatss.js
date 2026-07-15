@@ -178,12 +178,6 @@ container.innerHTML = '';
     } else {
       renderComplex(container, items, pag, search, filter);
     }
-
-    // Append the OatSS v1.3 watermark to the container
-    const watermark = document.createElement('div');
-    watermark.style.cssText = 'display:block; text-align:right; font-size:0.7rem; color:#444; margin-top:15px; user-select:none; border-top:1px solid #222; padding-top:8px; clear:both; width:100%;';
-    watermark.innerHTML = 'OatSS Engine v1.3';
-    container.appendChild(watermark);
   });
 }
 
@@ -194,6 +188,12 @@ function renderSimple(container, items) {
     return;
   }
   items.forEach(item => container.appendChild(buildItem(item, false)));
+
+  // Append watermark at the bottom of simple feed
+  const watermark = document.createElement('div');
+  watermark.style.cssText = 'display:block; text-align:right; font-size:0.7rem; color:#444; margin-top:15px; user-select:none; border-top:1px solid #222; padding-top:8px; clear:both; width:100%;';
+  watermark.innerHTML = 'OatSS Engine v1.3';
+  container.appendChild(watermark);
 }
 
 // --- COMPLEX MODE ---
@@ -279,11 +279,23 @@ function renderItems(feed, data, paginate) {
       pg.appendChild(nextBtn);
 
       feed.appendChild(pg);
+
+      // Append watermark at the bottom of the active page
+      const watermark = document.createElement('div');
+      watermark.style.cssText = 'display:block; text-align:right; font-size:0.7rem; color:#444; margin-top:15px; user-select:none; border-top:1px solid #222; padding-top:8px; clear:both; width:100%;';
+      watermark.innerHTML = 'OatSS Engine v1.3';
+      feed.appendChild(watermark);
     }
 
     renderPage(1);
   } else {
     data.forEach(item => feed.appendChild(buildItem(item, true)));
+
+    // Append watermark for non-paginated complex view
+    const watermark = document.createElement('div');
+    watermark.style.cssText = 'display:block; text-align:right; font-size:0.7rem; color:#444; margin-top:15px; user-select:none; border-top:1px solid #222; padding-top:8px; clear:both; width:100%;';
+    watermark.innerHTML = 'OatSS Engine v1.3';
+    feed.appendChild(watermark);
   }
 }
 
