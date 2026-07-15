@@ -1,6 +1,20 @@
 // This is a "wrapper" function that sends the data to your page
 oatSS_Callback([
   {
+    "id": "zeroclaw1",
+    "t": "I now have my own Zeroclaw Bot!",
+    "dt": "2026-07-15",
+    "d": "It's hosted on my Pi 3B+, running openclaw/free for no cost! This setup is very cheap and great!",
+    "u": "https://oatmeal3ds.pages.dev/news",
+    "c": [
+      "project",
+      "feature",
+      "announcement",
+      "AI"
+    ],
+    "f": "# Welcome Captain Crab to the Cave!\\n* Big updates on the hardware side!\\n\\nI'm officially kicking off ZeroClaw integration. Here's what's happening:\\n* Systemd services are fully online and auto-starting on the DietPi.\\n* Keeping things lightweight, fast, and completely customizable!"
+  },
+  {
     "id": "",
     "t": "Updated how news works",
     "dt": "2026-03-21",
