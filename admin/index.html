@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Admin</title>
+  <title>Admin - Cave Scrolls Control</title>
   
   <script src="https://www.google.com/recaptcha/api.js?render=6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU"></script>
   
@@ -14,6 +14,7 @@
   <link rel="stylesheet" href="/assets/elevatedmountains.css">
 
   <style>
+    /* Styling for the interactive item list editor */
     .drag-handle {
       cursor: grab;
       color: #555;
@@ -29,16 +30,19 @@
       gap: 8px;
     }
     .item-header b { flex-grow: 1; }
+    
+    /* Inherits your native background/borders */
     .news-item-editor {
       background: #1c1c1c;
       border: 1px solid #333;
-      border-left: 3px solid #2e4d22;
+      border-left: 3px solid var(--accent-green);
       padding: 12px;
       margin-bottom: 10px;
       transition: opacity 0.2s;
     }
     .news-item-editor.dragging { opacity: 0.4; }
     .news-item-editor.drag-over { border-top: 3px solid #fdd835; }
+    
     input[type="date"] {
       background: #1c1c1c;
       border: 1px solid #333;
@@ -51,7 +55,8 @@
       color-scheme: dark;
     }
     input[type="date"]:hover { border-color: #4a7a36; }
-    input[type="date"]:focus { border-color: #2e4d22; }
+    input[type="date"]:focus { border-color: var(--accent-green); }
+    
     input[type="text"], input[type="url"], textarea {
       width: 100%;
       margin-bottom: 6px;
@@ -70,6 +75,81 @@
       font-size: 0.8rem;
       margin-bottom: 2px;
       display: block;
+    }
+    
+    /* --- Tab Controls --- */
+    .admin-tabs {
+      display: flex;
+      border-bottom: 2px solid #333;
+      margin-bottom: 15px;
+      gap: 6px;
+    }
+    .admin-tab {
+      background: #1c1c1c;
+      color: #aaa;
+      border: 1px solid #333;
+      border-bottom: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-weight: bold;
+      font-size: 0.9rem;
+      transition: all 0.2s;
+    }
+    .admin-tab:hover {
+      background: #252525;
+      color: #fff;
+    }
+    .admin-tab.active {
+      background: var(--accent-green);
+      color: #fff;
+      border-color: var(--accent-green);
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+
+    /* --- Interactive Tag Pills --- */
+    .tag-pills-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin: 4px 0 10px 0;
+    }
+    .tag-pill {
+      background: #252525;
+      border: 1px solid #444;
+      color: #bbb;
+      padding: 3px 8px;
+      font-size: 0.75rem;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.15s;
+    }
+    .tag-pill:hover {
+      border-color: var(--accent-green);
+      color: #fff;
+    }
+    .tag-pill.active {
+      background: var(--accent-green);
+      border-color: var(--accent-green);
+      color: #fff;
+    }
+
+    /* Render area frame that mirrors live layout */
+    .admin-preview-container {
+      background: #111;
+      border: 1px dashed #333;
+      padding: 16px;
+    }
+    /* Controls spacing inside buttons on admin grid */
+    .admin-actions-bar {
+      display: flex;
+      gap: 8px;
+      margin-bottom: 15px;
+      flex-wrap: wrap;
     }
   </style>
 </head>
@@ -92,20 +172,33 @@
       <summary>Edit Cave News</summary>
       <div class="card-content">
 
-        <p class="hero-sub" style="margin:10px 0;text-align:left;">Preview</p>
-        <div id="news-preview" data-oatss="all" data-mode="complex" data-paginate="3">
-          <p style="color:#777;">Unrolling the scrolls...</p>
+        <div class="admin-tabs">
+          <div class="admin-tab active" onclick="switchTab('editor-tab')">
+            <i class="fa-solid fa-pen-to-square"></i> News Maker
+          </div>
+          <div class="admin-tab" onclick="switchTab('preview-tab')">
+            <i class="fa-solid fa-eye"></i> Live Render Preview
+          </div>
         </div>
 
-        <p class="hero-sub" style="margin:10px 0;text-align:left;">News Maker</p>
-        <button onclick="fetchNews()">Get News</button>
-        <button onclick="addItem()">Add Item</button>
-        <button onclick="generateOutput()">Get News Text</button>
-        <p id="status" style="font-size:0.85rem;color:#777;margin:6px 0;"></p>
+        <div id="editor-tab" class="tab-content active">
+          <div class="admin-actions-bar">
+            <button onclick="fetchNews()">Get News</button>
+            <button onclick="addItem()">Add Item</button>
+            <button onclick="generateOutput()">Get News Text</button>
+          </div>
+          <p id="status" style="font-size:0.85rem;color:#777;margin:6px 0;"></p>
 
-        <div id="items-container"></div>
+          <div id="items-container"></div>
+        </div>
 
-        <div id="output-section" style="display:none;">
+        <div id="preview-tab" class="tab-content">
+          <div id="news-preview" class="admin-preview-container">
+            <p style="color:#777;">No active scroll preview loaded. Fetch or update items to preview.</p>
+          </div>
+        </div>
+
+        <div id="output-section" style="display:none; margin-top: 20px;">
           <h3>Copy this into news.js:</h3>
           <textarea id="output-box" rows="20" readonly></textarea><br>
           <button onclick="copyOutput()">Copy</button>
@@ -152,17 +245,113 @@
       grecaptcha.execute('6LejqXQsAAAAAHq5CWNpprbsNuxzGRVNfW6z0TwU', {action: 'homepage'});
     });
 
+    // --- Tab Switcher Logic ---
+    function switchTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+      document.querySelectorAll('.admin-tab').forEach(el => el.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      
+      // Highlight the clicked tab button
+      const activeTabBtn = Array.from(document.querySelectorAll('.admin-tab')).find(btn => 
+        (tabId === 'editor-tab' && btn.textContent.includes('News Maker')) ||
+        (tabId === 'preview-tab' && btn.textContent.includes('Preview'))
+      );
+      if (activeTabBtn) activeTabBtn.classList.add('active');
+    }
+
+    // --- EMBEDDED OATMD PARSER (Fixes the "No engine script loaded" error) ---
+    function oatMD(text) {
+      if (!text) return "";
+      
+      // Normalize literal double-escaped "\n" sequences into true system newlines
+      text = text.replace(/\\\\n/g, "\n").replace(/\\n/g, "\n").replace(/\r\n/g, "\n");
+
+      // Parse Code Blocks
+      text = text.replace(/```(\w*)\n?([\s\S]*?)```/g, (m, lang, code) => {
+        const safe = code.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+        return `<pre><code>${safe}</code></pre>`;
+      });
+
+      // Split into lines to parse lists and headers
+      const lines = text.split("\n");
+      let inList = false;
+      const processedLines = [];
+
+      for (let line of lines) {
+        const trimmed = line.trim();
+        
+        // Bullet checks (* or -)
+        if (trimmed.startsWith("* ") || trimmed.startsWith("- ")) {
+          if (!inList) {
+            processedLines.push('<ul style="padding-left: 20px; margin: 8px 0;">');
+            inList = true;
+          }
+          const itemContent = trimmed.substring(2);
+          processedLines.push(`<li>${itemContent}</li>`);
+          continue;
+        } else {
+          if (inList) {
+            processedLines.push("</ul>");
+            inList = false;
+          }
+        }
+
+        // Headers & Quotes
+        if (trimmed.startsWith("### ")) {
+          processedLines.push(`<h3>${trimmed.substring(4)}</h3>`);
+        } else if (trimmed.startsWith("## ")) {
+          processedLines.push(`<h2>${trimmed.substring(3)}</h2>`);
+        } else if (trimmed.startsWith("# ")) {
+          processedLines.push(`<h1>${trimmed.substring(2)}</h1>`);
+        } else if (trimmed.startsWith("> ")) {
+          processedLines.push(`<blockquote>${trimmed.substring(2)}</blockquote>`);
+        } else {
+          processedLines.push(line);
+        }
+      }
+
+      if (inList) {
+        processedLines.push("</ul>");
+      }
+
+      let html = processedLines.join("\n");
+
+      // Inline replacement (Bold, Italic, Links)
+      html = html
+        .replace(/\*\*(.+?)\*\*/gim, "<b>$1</b>")
+        .replace(/(^|[^*])\*(?!\*)([^*]+)\*(?!\*)/gim, "$1<i>$2</i>")
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/gim, "<a href='$2'>$1</a>")
+        .replace(/\n/g, "<br>");
+
+      return html;
+    }
+
     // --- NEWS EDITOR ---
     const NEWS_URL = '/news.js';
     let items = [];
     let dragSrcIndex = null;
+    let globallyUsedTags = new Set(["site", "feature", "announcement", "fix", "project", "AI"]);
 
     function fetchNews() {
       document.getElementById('status').textContent = 'Fetching...';
       const prev = window.oatSS_Callback;
       window.oatSS_Callback = function(data) {
         items = JSON.parse(JSON.stringify(data));
+        
+        // Pull all unique tags from current data
+        items.forEach(item => {
+          let rawCats = item.c;
+          if (typeof rawCats === 'string') {
+            rawCats = rawCats.split(',').map(s => s.trim()).filter(Boolean);
+          }
+          if (Array.isArray(rawCats)) {
+            rawCats.forEach(tag => globallyUsedTags.add(tag));
+          }
+        });
+
         renderItems();
+        updateLivePreview();
         document.getElementById('status').textContent = `Loaded ${items.length} item(s).`;
         window.oatSS_Callback = prev;
       };
@@ -190,14 +379,16 @@
         div.draggable = true;
         div.dataset.index = i;
 
-        // support both old and new format
         const title = item.t || item.title || '';
         const date  = item.dt || item.date || '';
         const desc  = item.d || item.desc || '';
         const url   = item.u || item.url || '';
-        const cats  = Array.isArray(item.c) ? item.c.join(', ') : (item.c || '');
+        const cats  = Array.isArray(item.c) ? item.c : (item.c ? item.c.split(',').map(s => s.trim()) : []);
         const id    = item.id || '';
-        const full  = item.f || '';
+        
+        // Convert internal \\n markers back to raw linebreaks for textarea editing
+        let full  = item.f || '';
+        full = full.replace(/\\n/g, "\n"); 
 
         div.innerHTML = `
           <div class="item-header">
@@ -206,19 +397,22 @@
             <button onclick="removeItem(${i})">Remove</button>
           </div>
           <span class="field-label">ID</span>
-          <input type="text" id="id-${i}" value="${esc(id)}" placeholder="unique-id"><br>
+          <input type="text" id="id-${i}" value="${esc(id)}" placeholder="unique-id" oninput="collectAndPreview()"><br>
           <span class="field-label">Title</span>
-          <input type="text" id="title-${i}" value="${esc(title)}"><br>
+          <input type="text" id="title-${i}" value="${esc(title)}" oninput="collectAndPreview()"><br>
           <span class="field-label">Date</span>
-          <input type="date" id="date-${i}" value="${toInputDate(date)}"><br>
+          <input type="date" id="date-${i}" value="${toInputDate(date)}" onchange="collectAndPreview()"><br>
           <span class="field-label">Description (short)</span>
-          <textarea id="desc-${i}">${esc(desc)}</textarea>
+          <textarea id="desc-${i}" oninput="collectAndPreview()">${esc(desc)}</textarea>
           <span class="field-label">URL</span>
-          <input type="url" id="url-${i}" value="${esc(url)}"><br>
-          <span class="field-label">Categories (comma separated, e.g. site, feature, announcement)</span>
-          <input type="text" id="cats-${i}" value="${esc(cats)}" placeholder="site, feature"><br>
+          <input type="url" id="url-${i}" value="${esc(url)}" oninput="collectAndPreview()"><br>
+          
+          <span class="field-label">Categories (comma separated or toggle pills below)</span>
+          <input type="text" id="cats-${i}" value="${esc(cats.join(', '))}" placeholder="site, feature" oninput="handleTagsInput(${i})"><br>
+          <div class="tag-pills-container" id="pills-container-${i}"></div>
+
           <span class="field-label">Full Content (markdown, optional)</span>
-          <textarea id="full-${i}" rows="4" placeholder="# Title\n\nFull article in markdown...">${esc(full)}</textarea>`;
+          <textarea id="full-${i}" rows="4" placeholder="# Title\n\nFull article... \n* Use bullets" oninput="collectAndPreview()">${esc(full)}</textarea>`;
 
         div.addEventListener('dragstart', () => {
           dragSrcIndex = i;
@@ -240,17 +434,69 @@
           const moved = items.splice(dragSrcIndex, 1)[0];
           items.splice(i, 0, moved);
           renderItems();
+          updateLivePreview();
           dragSrcIndex = null;
         });
 
         container.appendChild(div);
+        renderTagPills(i, cats);
       });
+    }
+
+    // --- INTERACTIVE TAG PILLS ---
+    function renderTagPills(index, activeTags) {
+      const pillsContainer = document.getElementById(`pills-container-${index}`);
+      if (!pillsContainer) return;
+
+      pillsContainer.innerHTML = '';
+      const lowercaseActive = activeTags.map(t => t.toLowerCase().trim());
+
+      globallyUsedTags.forEach(tag => {
+        const span = document.createElement('span');
+        span.className = `tag-pill ${lowercaseActive.includes(tag.toLowerCase()) ? 'active' : ''}`;
+        span.textContent = tag;
+        span.onclick = () => toggleTag(index, tag);
+        pillsContainer.appendChild(span);
+      });
+    }
+
+    function toggleTag(index, tag) {
+      const input = document.getElementById(`cats-${index}`);
+      if (!input) return;
+
+      let tags = input.value.split(',').map(t => t.trim()).filter(Boolean);
+      const tagIndex = tags.findIndex(t => t.toLowerCase() === tag.toLowerCase());
+
+      if (tagIndex > -1) {
+        tags.splice(tagIndex, 1);
+      } else {
+        tags.push(tag);
+        globallyUsedTags.add(tag);
+      }
+
+      input.value = tags.join(', ');
+      collectAndPreview();
+      renderTagPills(index, tags);
+    }
+
+    function handleTagsInput(index) {
+      const input = document.getElementById(`cats-${index}`);
+      if (!input) return;
+
+      const currentTags = input.value.split(',').map(t => t.trim()).filter(Boolean);
+      currentTags.forEach(t => {
+        if (t.length > 0) globallyUsedTags.add(t);
+      });
+
+      collectAndPreview();
+      renderTagPills(index, currentTags);
     }
 
     function addItem() {
       const today = new Date().toISOString().split('T')[0];
       items.unshift({ id: '', t: '', dt: today, d: '', u: '', c: [], f: '' });
       renderItems();
+      updateLivePreview();
       const cards = document.querySelectorAll('.news-item-editor');
       if (cards.length) cards[0].scrollIntoView({ behavior: 'smooth' });
     }
@@ -259,13 +505,18 @@
       collectItems();
       items.splice(i, 1);
       renderItems();
+      updateLivePreview();
     }
 
     function collectItems() {
       items = items.map((_, i) => {
         const catsRaw = document.getElementById(`cats-${i}`)?.value || '';
         const cats = catsRaw.split(',').map(s => s.trim()).filter(Boolean);
-        const full = document.getElementById(`full-${i}`)?.value || '';
+        const fullRaw = document.getElementById(`full-${i}`)?.value || '';
+        
+        // Escape newlines as static safe characters before serialization
+        const escapedFull = fullRaw.replace(/\n/g, "\\n");
+
         return {
           id:  document.getElementById(`id-${i}`)?.value || '',
           t:   document.getElementById(`title-${i}`)?.value || '',
@@ -273,9 +524,56 @@
           d:   document.getElementById(`desc-${i}`)?.value || '',
           u:   document.getElementById(`url-${i}`)?.value || '',
           c:   cats,
-          ...(full ? { f: full } : {})
+          ...(escapedFull ? { f: escapedFull } : {})
         };
       });
+    }
+
+    function collectAndPreview() {
+      collectItems();
+      updateLivePreview();
+    }
+
+    // --- NATIVE STYLED LIVE PREVIEW ENGINE ---
+    function updateLivePreview() {
+      const preview = document.getElementById('news-preview');
+      if (!items || items.length === 0) {
+        preview.innerHTML = '<p style="color:#777;">No active scroll preview loaded.</p>';
+        return;
+      }
+      
+      let previewHTML = '';
+      items.forEach(item => {
+        const cats = Array.isArray(item.c) ? item.c : [];
+        const date = item.dt || item.date || 'No Date';
+        const title = item.t || item.title || 'Untitled';
+        const desc = item.d || item.desc || '';
+        const url = item.u || item.url || '';
+        const fullContent = item.f || '';
+
+        // Leverages your exact .news-item, .news-date, .news-link, .news-desc CSS rules
+        previewHTML += `
+          <div class="news-item" style="margin-bottom: 24px; padding-bottom: 12px; border-bottom: 1px solid #222;">
+            <span class="news-date">${date}</span>
+            <a href="${url ? url : 'javascript:void(0)'}" target="_blank" class="news-link">
+              ${title}
+              ${url ? '<i class="fa-solid fa-arrow-up-right-from-square" style="font-size:0.7rem;margin-left:5px;"></i>' : ''}
+            </a>
+            <p class="news-desc">${desc}</p>
+            ${cats.length ? `<p style="font-size:0.75rem;color:#555;margin:4px 0 0;">${cats.join(' · ')}</p>` : ''}
+            
+            ${fullContent ? `
+              <div style="background: #181818; border-left: 2px dashed #444; padding: 12px; margin-top: 10px;">
+                <span style="font-size: 0.75rem; color: #555; display: block; margin-bottom: 6px; text-transform: uppercase;">Modal View Render:</span>
+                <div style="color: #eee; line-height: 1.8;">
+                  ${oatMD(fullContent)}
+                </div>
+              </div>
+            ` : ''}
+          </div>
+        `;
+      });
+      preview.innerHTML = previewHTML;
     }
 
     function generateOutput() {
