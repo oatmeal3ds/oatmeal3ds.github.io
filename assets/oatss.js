@@ -181,7 +181,7 @@ container.innerHTML = '';
 
     // Append the OatSS v1.3 watermark to the container
     const watermark = document.createElement('div');
-    watermark.style.cssText = 'text-align:right; font-size:0.7rem; color:#444; margin-top:15px; user-select:none; border-top:1px solid #222; padding-top:8px; clear:both;';
+    watermark.style.cssText = 'display:block; text-align:right; font-size:0.7rem; color:#444; margin-top:15px; user-select:none; border-top:1px solid #222; padding-top:8px; clear:both; width:100%;';
     watermark.innerHTML = 'OatSS Engine v1.3';
     container.appendChild(watermark);
   });
