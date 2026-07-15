@@ -4,14 +4,14 @@
 //   Simple:  <div data-oatss="all" data-mode="simple" data-limit="3" data-age="week"></div>
 //   Complex: <div data-oatss="all" data-mode="complex" data-paginate="5" data-search="true" data-filter="true"></div>
 
-// --- MARKDOWN PARSER (FIXED) ---
+// --- MARKDOWN PARSER (UPDATED BULLET MATCHING) ---
 function oatMD(text) {
   if (!text) return "";
   
-  // Convert literal string "\n" or "\\n" sequences into real line breaks first!
+  // Clean up any literal "\n" strings first
   text = text.replace(/\\n/g, "\n");
 
-  if (!text) return "";
+  // Code block parser... (left as is)
   text = text.replace(/```(\w*)\n?([\s\S]*?)```/g, (m, lang, code) => {
     const safe = code
       .replace(/&/g, "&amp;")
@@ -19,6 +19,7 @@ function oatMD(text) {
       .replace(/>/g, "&gt;");
     return `<pre><code>${safe}</code></pre>`;
   });
+
   return text
     .replace(/^### (.*)$/gim, "<h3>$1</h3>")
     .replace(/^## (.*)$/gim, "<h2>$1</h2>")
@@ -27,13 +28,16 @@ function oatMD(text) {
     .replace(/(^|[^*])\*(?!\*)([^*]+)\*(?!\*)/gim, "$1<i>$2</i>")
     .replace(/\[([^\]]+)\]\(([^)]+)\)/gim, "<a href='$2'>$1</a>")
     .replace(/^> (.*)$/gim, "<blockquote>$1</blockquote>")
-    .replace(/(?:^- .+\n?)+/gim, match => {
+    
+    // --- UPDATED BULLET REGEX (Matches both * and -) ---
+    .replace(/(?:^[*-] .+\n?)+/gim, match => {
       const items = match.trim().split("\n")
-        .map(line => line.replace(/^- /, ""))
+        .map(line => line.replace(/^[*-] /, "")) // Strip either '*' or '-'
         .map(item => `<li>${item}</li>`)
         .join("");
-      return `<ul>${items}</ul>`;
+      return `<ul style="padding-left: 20px; margin: 8px 0;">${items}</ul>`;
     })
+    
     .replace(/\n{2,}/g, "<br><br>");
 }
 
