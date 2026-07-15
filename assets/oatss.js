@@ -1,4 +1,4 @@
-// OATSS 1.2 — Cave Scrolls Engine
+// OATSS 1.3 — Cave Scrolls Engine
 // Modes: simple (home page widget) | complex (full news page)
 // Usage:
 //   Simple:  <div data-oatss="all" data-mode="simple" data-limit="3" data-age="week"></div>
@@ -171,13 +171,19 @@ function oatSS_Callback(data) {
     // limit
     if (limit) items = items.slice(0, limit);
 
-    container.innerHTML = '';
+container.innerHTML = '';
 
     if (mode === 'simple') {
       renderSimple(container, items);
     } else {
       renderComplex(container, items, pag, search, filter);
     }
+
+    // Append the OatSS v1.3 watermark to the container
+    const watermark = document.createElement('div');
+    watermark.style.cssText = 'text-align:right; font-size:0.7rem; color:#444; margin-top:15px; user-select:none; border-top:1px solid #222; padding-top:8px; clear:both;';
+    watermark.innerHTML = 'OatSS Engine v1.3';
+    container.appendChild(watermark);
   });
 }
 
